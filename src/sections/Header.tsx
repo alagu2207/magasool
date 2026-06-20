@@ -6,25 +6,32 @@ import { Container } from '../ui/Container';
 import { Logo } from '../ui/Logo';
 import { Button } from '../ui/Button';
 import { useResponsive } from '../hooks/useResponsive';
+import { useNav } from '../nav/NavProvider';
 import { NAV } from '../data';
 
 export function Header() {
   const { isMobile } = useResponsive();
+  const { navigate } = useNav();
   const [active, setActive] = useState('Home');
   const [open, setOpen] = useState(false);
+
+  // Home/About/etc. live on the home page; tapping a nav item returns there.
+  const go = (item: string) => { setActive(item); navigate('home'); };
 
   return (
     <View style={styles.bar}>
       <Container>
         <View style={styles.row}>
-          <Logo />
+          <Pressable onPress={() => go('Home')}>
+            <Logo height={isMobile ? 64 : 88} />
+          </Pressable>
 
           {!isMobile && (
             <View style={styles.nav}>
               {NAV.map((item) => {
                 const isActive = item === active;
                 return (
-                  <Pressable key={item} onPress={() => setActive(item)} style={styles.navItem}>
+                  <Pressable key={item} onPress={() => go(item)} style={styles.navItem}>
                     <Text style={[styles.navText, isActive && styles.navTextActive]}>{item}</Text>
                     {isActive && <View style={styles.navUnderline} />}
                   </Pressable>
@@ -36,7 +43,7 @@ export function Header() {
           {!isMobile ? (
             <View style={styles.actions}>
               <Button label="Login" variant="outline" size="sm" icon="person-outline" />
-              <Button label="Register" variant="orange" size="sm" icon="person-add-outline" style={{ marginLeft: 10 }} />
+              <Button label="Register" variant="yellow" size="sm" icon="person-add-outline" style={{ marginLeft: 10 }} />
             </View>
           ) : (
             <Pressable onPress={() => setOpen((o) => !o)} style={styles.burger}>
@@ -48,13 +55,13 @@ export function Header() {
         {isMobile && open && (
           <View style={styles.mobileMenu}>
             {NAV.map((item) => (
-              <Pressable key={item} onPress={() => { setActive(item); setOpen(false); }} style={styles.mobileItem}>
+              <Pressable key={item} onPress={() => { go(item); setOpen(false); }} style={styles.mobileItem}>
                 <Text style={[styles.navText, item === active && styles.navTextActive]}>{item}</Text>
               </Pressable>
             ))}
             <View style={styles.mobileActions}>
               <Button label="Login" variant="outline" size="sm" icon="person-outline" full style={{ flex: 1 }} />
-              <Button label="Register" variant="orange" size="sm" icon="person-add-outline" full style={{ flex: 1, marginLeft: 10 }} />
+              <Button label="Register" variant="yellow" size="sm" icon="person-add-outline" full style={{ flex: 1, marginLeft: 10 }} />
             </View>
           </View>
         )}

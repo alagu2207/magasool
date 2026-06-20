@@ -27,14 +27,15 @@ export function CTABanner() {
             <View style={styles.copy}>
               <Text style={styles.title}>Ready to Grow Together?</Text>
               <Text style={styles.sub}>
-                Join Magasool today and be a part of a trusted network that connects, grows and prospers together.
+                Join Magasool today — a trusted network where farmers and buyers connect,
+                trade fairly, and grow together.
               </Text>
             </View>
           </View>
 
           <View style={[styles.actions, isMobile && styles.actionsStack]}>
             <Button label="Join as Farmer" variant="outline" icon="paper-plane-outline" onPress={() => openForm('farmer')} style={styles.joinFarmer} />
-            <Button label="Join as Buyer" variant="orange" icon="cart-outline" onPress={() => openForm('buyer')} style={!isMobile ? { marginLeft: 12 } : { marginTop: 10 }} />
+            <Button label="Join as Buyer" variant="yellow" icon="cart-outline" onPress={() => openForm('buyer')} style={!isMobile ? { marginLeft: 12 } : { marginTop: 10 }} />
           </View>
         </LinearGradient>
       </Container>

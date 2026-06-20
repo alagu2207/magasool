@@ -2,8 +2,9 @@ import React from 'react';
 import { Pressable, Text, StyleSheet, ViewStyle, StyleProp, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius } from '../theme';
+import { sound } from './sound';
 
-type Variant = 'green' | 'orange' | 'outline' | 'ghost';
+type Variant = 'green' | 'yellow' | 'outline' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';
 
 type Props = {
@@ -27,12 +28,24 @@ export function Button({ label, variant = 'green', size = 'md', icon, onPress, s
   const isOutline = variant === 'outline';
   const isGhost = variant === 'ghost';
   const bg =
-    variant === 'green' ? colors.green : variant === 'orange' ? colors.orange : 'transparent';
-  const fg = isOutline ? colors.ink : isGhost ? colors.green : colors.white;
+    variant === 'green' ? colors.green : variant === 'yellow' ? colors.yellow : 'transparent';
+  const fg = isOutline
+    ? colors.ink
+    : isGhost
+    ? colors.green
+    : variant === 'yellow'
+    ? colors.greenDark // dark text reads on the golden background
+    : colors.white;
+
+  const handlePress = () => {
+    sound.click();
+    onPress?.();
+  };
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
+      accessibilityRole="button"
       style={({ pressed }) => [
         styles.base,
         {

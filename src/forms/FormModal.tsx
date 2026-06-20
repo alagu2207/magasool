@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Modal, View, Text, StyleSheet, TextInput, Pressable, ScrollView, ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadow } from '../theme';
 import { Button } from '../ui/Button';
-import { API_URL } from '../config';
+import { sound } from '../ui/sound';
 import { FORM_META, FormType, Field } from './fields';
+import { GOOGLE_FORMS, isFormConfigured, formResponseUrl, buildFormBody } from './googleForms';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -28,6 +29,16 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>('idle');
   const [serverError, setServerError] = useState('');
+
+  // Whoosh when the form opens (the component is remounted per-open via `key`).
+  useEffect(() => {
+    if (which) sound.open();
+  }, [which]);
+
+  // Celebratory arpeggio once the submission succeeds.
+  useEffect(() => {
+    if (status === 'success') sound.success();
+  }, [status]);
 
   // State is reset on open via a `key` on this component from FormModalProvider.
   if (!which || !meta) return null;
@@ -51,28 +62,42 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
 
   const submit = async () => {
     if (!validate()) return;
+
+    const cfg = GOOGLE_FORMS[which];
+    if (!isFormConfigured(cfg)) {
+      setStatus('error');
+      setServerError(
+        'Google Form is not configured yet. Add the form id + entry ids in src/forms/googleForms.ts.',
+      );
+      return;
+    }
+
     setStatus('submitting');
     setServerError('');
     try {
-      const res = await fetch(`${API_URL}/api/submit`, {
+      // Google Forms has no CORS headers, so we fire-and-forget with mode:'no-cors'.
+      // The response is opaque (unreadable) but the row is still saved to the form.
+      await fetch(formResponseUrl(cfg.formId), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: which, data: values }),
+        mode: 'no-cors',
+        body: buildFormBody(cfg, values),
       });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok || !json.ok) throw new Error(json.error || `Request failed (${res.status})`);
       setStatus('success');
     } catch (e: any) {
       setStatus('error');
       setServerError(
         e?.message?.includes('Failed to fetch')
-          ? 'Could not reach the server. Is the Magasool backend running?'
-          : e?.message || 'Something went wrong.',
+          ? 'Could not reach Google. Check your internet connection and try again.'
+          : e?.message || 'Something went wrong. Please try again.',
       );
     }
   };
 
-  const accent = which === 'farmer' ? colors.green : colors.orange;
+  const isFarmer = which === 'farmer';
+  const accent = isFarmer ? colors.green : colors.yellow;
+  // Text/icons sitting on top of the accent: white on green, dark on yellow.
+  const onAccent = isFarmer ? colors.white : colors.greenDark;
+  const onAccentSub = isFarmer ? 'rgba(255,255,255,0.9)' : 'rgba(17,51,31,0.72)';
 
   return (
     <Modal visible transparent animationType="fade" onRequestClose={onClose}>
@@ -82,24 +107,24 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
           {/* Header */}
           <View style={[styles.header, { backgroundColor: accent }]}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.title}>{meta.title}</Text>
-              <Text style={styles.subtitle}>{meta.subtitle}</Text>
+              <Text style={[styles.title, { color: onAccent }]}>{meta.title}</Text>
+              <Text style={[styles.subtitle, { color: onAccentSub }]}>{meta.subtitle}</Text>
             </View>
             <Pressable onPress={onClose} style={styles.close} hitSlop={8}>
-              <Ionicons name="close" size={22} color={colors.white} />
+              <Ionicons name="close" size={22} color={onAccent} />
             </Pressable>
           </View>
 
           {status === 'success' ? (
             <View style={styles.successWrap}>
               <View style={[styles.successIcon, { backgroundColor: accent }]}>
-                <Ionicons name="checkmark" size={34} color={colors.white} />
+                <Ionicons name="checkmark" size={34} color={onAccent} />
               </View>
-              <Text style={styles.successTitle}>Thank you!</Text>
+              <Text style={styles.successTitle}>You're all set!</Text>
               <Text style={styles.successText}>
-                Your details have been submitted. Our team will reach out to you shortly.
+                We've received your details. Our team will reach out to you shortly to take the next step.
               </Text>
-              <Button label="Done" variant={which === 'farmer' ? 'green' : 'orange'} full onPress={onClose} style={{ marginTop: 18 }} />
+              <Button label="Done" variant={isFarmer ? 'green' : 'yellow'} full onPress={onClose} style={{ marginTop: 18 }} />
             </View>
           ) : (
             <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent} keyboardShouldPersistTaps="handled">
@@ -136,7 +161,7 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
 
               <Button
                 label={status === 'submitting' ? 'Submitting…' : meta.submitLabel}
-                variant={which === 'farmer' ? 'green' : 'orange'}
+                variant={isFarmer ? 'green' : 'yellow'}
                 icon="paper-plane-outline"
                 full
                 onPress={submit}
@@ -177,7 +202,7 @@ const styles = StyleSheet.create({
   bodyContent: { padding: 22 },
   fieldWrap: { marginBottom: 14 },
   label: { fontSize: 13, fontWeight: '700', color: colors.ink, marginBottom: 6 },
-  req: { color: colors.orange },
+  req: { color: colors.yellowDark },
   input: {
     backgroundColor: colors.white,
     borderWidth: 1,

@@ -9,37 +9,70 @@ export const HERO_BADGES = [
 ];
 
 export const HERO_FLOW = [
-  { emoji: '👨‍🌾', role: 'Farmer', desc: 'Lists produce\nfrom the farm', tint: '#E8F3E9' },
-  { emoji: '🧑‍💼', role: 'Sales Executive', desc: 'Connects, negotiates\n& ensures quality', tint: '#E5F0FB' },
-  { emoji: '🧑‍🔧', role: 'Buyer', desc: 'Sources quality produce\nat the best price', tint: '#FBEFE6' },
+  { emoji: '👨‍🌾', role: 'Farmer', desc: 'Lists fresh produce\nstraight from the farm', tint: '#E8F3E9' },
+  { emoji: '🧑‍💼', role: 'Magasool Team', desc: 'Connects, negotiates\n& checks quality', tint: '#E5F0FB' },
+  { emoji: '🧑‍🔧', role: 'Buyer', desc: 'Sources quality produce\nat a fair price', tint: '#FBEFE6' },
 ];
+
+export const ABOUT = {
+  eyebrow: 'About Us',
+  tagline: 'Empowering Farmers. Connecting Markets. Growing Together.',
+  paragraphs: [
+    'At Magasool, we are dedicated to transforming the agricultural marketplace by creating a transparent and efficient connection between farmers and buyers. Our platform is designed to help farmers gain access to better market opportunities while enabling buyers and distributors to source quality agricultural products at competitive prices.',
+    'We understand the challenges faced by farmers in finding reliable buyers and obtaining fair value for their hard work. Similarly, buyers often struggle to identify genuine suppliers and secure quality produce at the right price. Our mission is to bridge this gap through technology, market intelligence, and professional coordination.',
+    'Unlike traditional brokerage systems, our platform acts as a trusted facilitator. Farmers can register their cultivated products, and buyers or distributors can submit their requirements. Based on these requirements, our team identifies suitable opportunities, coordinates transactions, and supports both parties throughout the process to ensure smooth and successful business dealings.',
+  ],
+  whyTitle: 'Why Choose Us',
+  why: [
+    {
+      icon: 'trending-up' as const,
+      title: 'Fair Market Access',
+      desc: 'We help farmers reach genuine buyers and expand their selling opportunities beyond local markets.',
+    },
+    {
+      icon: 'ribbon' as const,
+      title: 'Quality Sourcing',
+      desc: 'Buyers gain access to reliable agricultural products sourced directly from verified farming communities.',
+    },
+    {
+      icon: 'eye' as const,
+      title: 'Transparent Process',
+      desc: 'Our platform promotes transparency, trust, and efficiency throughout the transaction process.',
+    },
+    {
+      icon: 'hardware-chip' as const,
+      title: 'Technology-Driven Solutions',
+      desc: 'We leverage digital tools to simplify agricultural trade and improve communication between stakeholders.',
+    },
+  ],
+};
 
 export const STEPS = [
   {
     no: '01',
     icon: 'account-hard-hat' as const,
     title: 'For Farmers',
-    desc: 'Register, list your produce, and get connected with verified buyers through our sales executives.',
+    desc: 'Register, list your produce, and get connected with verified buyers through our Magasool team.',
   },
   {
     no: '02',
     icon: 'briefcase-outline' as const,
     title: 'For Buyers',
-    desc: 'Submit your requirements, connect with our sales team, and get the best quality at fair prices.',
+    desc: 'Submit your requirements, connect with our Magasool team, and get the best quality at fair prices.',
   },
   {
     no: '03',
     icon: 'account-group-outline' as const,
-    title: 'For Sales Team',
-    desc: 'Our sales executives bridge the gap between farmers and buyers and ensure smooth transactions.',
+    title: 'For the Magasool Team',
+    desc: 'Our Magasool team bridges the gap between farmers and buyers and ensures smooth transactions.',
   },
 ];
 
 export const STATS = [
   { icon: 'people' as const, value: '15,000+', label: 'Verified Farmers' },
   { icon: 'briefcase' as const, value: '2,500+', label: 'Active Buyers' },
-  { icon: 'swap-horizontal' as const, value: '1,20,000+', label: 'Transactions' },
-  { icon: 'cash' as const, value: '₹350 Cr+', label: 'Revenue Generated' },
+  { icon: 'swap-horizontal' as const, value: '1,20,000+', label: 'Trades Completed' },
+  { icon: 'cash' as const, value: '₹350 Cr+', label: 'Trade Facilitated' },
 ];
 
 export const WHY = [
@@ -55,8 +88,8 @@ export const WHY = [
   },
   {
     icon: 'person' as const,
-    title: 'Dedicated Sales Executive',
-    desc: 'Personalized support from dedicated executives for seamless communication.',
+    title: 'Dedicated Magasool Team',
+    desc: 'Personalized support from a dedicated Magasool team for seamless communication.',
   },
   {
     icon: 'headset' as const,
@@ -68,7 +101,7 @@ export const WHY = [
 export const TESTIMONIALS = [
   {
     quote:
-      'Magasool helped us sell our bananas at a better price with genuine buyers. The sales team is very supportive.',
+      'Magasool helped us sell our bananas at a better price with genuine buyers. The Magasool team is very supportive.',
     name: 'Ramesh Patil',
     role: 'Farmer, Nashik',
     emoji: '👨‍🌾',
@@ -82,9 +115,9 @@ export const TESTIMONIALS = [
   },
   {
     quote:
-      'Being a sales executive with Magasool has helped me build strong relationships and grow my business.',
+      'Being part of the Magasool team has helped me build strong relationships and grow my business.',
     name: 'Sandeep Kumar',
-    role: 'Sales Executive',
+    role: 'Magasool Team',
     emoji: '🧑‍🔧',
   },
 ];
@@ -98,3 +131,204 @@ export const FOOTER = {
   ],
   socials: ['logo-facebook', 'logo-twitter', 'logo-linkedin', 'logo-instagram'] as const,
 };
+
+/**
+ * Privacy Policy page content. Blocks are a small discriminated union so the page
+ * can render paragraphs, bullet lists, and sub-grouped lists from one data source.
+ */
+export const PRIVACY = {
+  title: 'Privacy Policy',
+  effective: 'Last updated: June 20, 2026',
+  contact: { phone: '+91 97905 75351', email: 'suppormagasool@gmail.com' },
+  intro: [
+    'Welcome to Magasool ("Company", "we", "our", or "us"). We are committed to protecting the privacy and personal information of farmers, buyers, distributors, and other users who access our website and services.',
+    'This Privacy Policy explains how we collect, use, store, disclose, and protect your personal information when you use our platform.',
+    'By accessing or using our website, you agree to the collection and use of information in accordance with this Privacy Policy.',
+  ],
+  sections: [
+    {
+      id: 'who-we-are',
+      icon: 'leaf',
+      title: 'Who We Are',
+      art: 'none',
+      blocks: [
+        {
+          type: 'p',
+          text: 'This mediation platform is named and created by Magasool. Helping farmers and buyers/distributors gain access to better market opportunities and to source quality agricultural products at competitive prices. For any privacy related queries, contact us at +91 97905 75351 or suppormagasool@gmail.com',
+        },
+      ],
+    },
+    {
+      id: 'information-we-collect',
+      icon: 'document-text',
+      title: 'Information We Collect',
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'We may collect the following information from users:' },
+        {
+          type: 'group',
+          subtitle: 'Farmers',
+          lead: '',
+          items: ['Full name', 'Mobile number', 'Email address (if provided)', 'Address and location details', 'Farm details', 'Product/crop information'],
+        },
+        {
+          type: 'group',
+          subtitle: 'Buyers / Distributors',
+          lead: '',
+          items: ['Full name', 'Company name (if distributor)', 'Mobile number', 'Email address', 'Business address (if distributor)', 'Product requirements'],
+        },
+        {
+          type: 'group',
+          subtitle: 'Automatically Collected Information',
+          lead: 'When you visit our website, we may automatically collect:',
+          items: ['IP address', 'Browser type', 'Device information', 'Website usage data', 'Cookies and similar technologies'],
+        },
+      ],
+    },
+    {
+      id: 'purpose',
+      icon: 'compass',
+      title: 'Purpose of Data Collection',
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'We collect personal information for the following purposes:' },
+        {
+          type: 'list',
+          items: [
+            'User registration and account management',
+            'Verification of farmers and buyers',
+            'Matching product requirements with available agricultural products',
+            'Facilitating business transactions and enquiries',
+            'Customer support and communication',
+            'Processing payments and service charges',
+            'Improving platform functionality and user experience',
+            'Compliance with legal and regulatory requirements',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'how-we-use',
+      icon: 'construct',
+      title: 'How We Use Your Information',
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'Your information may be used to:' },
+        {
+          type: 'list',
+          items: [
+            'Create and manage user accounts',
+            'Connect farmers with potential buyers through our mediation services',
+            'Contact users regarding enquiries, transactions, and platform updates',
+            'Provide customer support',
+            'Prevent fraud and misuse of services',
+            'Generate reports and analytics',
+            'Comply with applicable laws and government regulations',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'sharing',
+      icon: 'share-social',
+      title: 'Information Sharing and Disclosure',
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'We do not sell or rent personal information to third parties.' },
+        { type: 'p', text: 'We may share information with:' },
+        {
+          type: 'list',
+          items: [
+            'Verified farmers and buyers where necessary to facilitate transactions',
+            'Service providers assisting in website operation and payment processing',
+            'Government authorities or law enforcement agencies when required by law',
+            'Professional advisors, auditors, or legal consultants where necessary',
+          ],
+        },
+        { type: 'p', text: 'All third parties receiving personal information are required to maintain confidentiality and security.' },
+      ],
+    },
+    {
+      id: 'security',
+      icon: 'shield-checkmark',
+      title: 'Data Security',
+      art: 'secure',
+      blocks: [
+        { type: 'p', text: 'We implement reasonable technical and organizational security measures to protect personal information against:' },
+        { type: 'list', items: ['Unauthorized access', 'Disclosure', 'Alteration', 'Loss or destruction'] },
+        { type: 'p', text: 'While we strive to protect user information, no online transmission or storage system can be guaranteed to be completely secure.' },
+      ],
+    },
+    {
+      id: 'retention',
+      icon: 'time',
+      title: 'Data Retention',
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'We retain personal information only for as long as necessary to:' },
+        { type: 'list', items: ['Provide our services', 'Fulfill contractual obligations', 'Resolve disputes', 'Comply with legal and regulatory requirements'] },
+        { type: 'p', text: 'Upon completion of the retention period, information may be securely deleted or anonymized.' },
+      ],
+    },
+    {
+      id: 'user-rights',
+      icon: 'person-circle',
+      title: 'User Rights',
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'Subject to applicable laws, users may:' },
+        {
+          type: 'list',
+          items: [
+            'Access their personal information',
+            'Request correction of inaccurate information',
+            'Request deletion of personal information',
+            'Withdraw consent where applicable',
+            'Contact us regarding privacy concerns',
+          ],
+        },
+        { type: 'p', text: 'Requests may be submitted using the contact details provided below.' },
+      ],
+    },
+    {
+      id: 'cookies',
+      icon: 'options',
+      title: 'Cookies',
+      art: 'cookie',
+      blocks: [
+        { type: 'p', text: 'Our website may use cookies and similar technologies to:' },
+        { type: 'list', items: ['Improve website functionality', 'Analyze website traffic', 'Enhance user experience'] },
+        { type: 'p', text: 'Users may disable cookies through browser settings, although certain website features may not function properly.' },
+      ],
+    },
+    {
+      id: 'third-party',
+      icon: 'link',
+      title: 'Third-Party Links',
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'Our website may contain links to third-party websites. We are not responsible for the privacy practices or content of such external websites. Users are encouraged to review their privacy policies before providing personal information.' },
+      ],
+    },
+    {
+      id: 'children',
+      icon: 'people',
+      title: "Children's Privacy",
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'Our services are intended for individuals aged 18 years and above. We do not knowingly collect personal information from minors without appropriate authorization.' },
+      ],
+    },
+    {
+      id: 'changes',
+      icon: 'sync',
+      title: 'Changes to this Privacy Policy',
+      art: 'none',
+      blocks: [
+        { type: 'p', text: 'We reserve the right to update or modify this Privacy Policy at any time. Any changes will be posted on this page with the revised effective date.' },
+        { type: 'p', text: 'Continued use of the website after such updates constitutes acceptance of the revised Privacy Policy.' },
+      ],
+    },
+  ],
+  closing: 'By using our website and services, you acknowledge that you have read and understood this Privacy Policy.',
+} as const;

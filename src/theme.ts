@@ -1,6 +1,6 @@
 /**
  * Magasool design tokens.
- * Green = trust/agriculture, Orange = action/buyer CTAs.
+ * Green = trust/agriculture, Yellow = action/buyer CTAs (use dark text on yellow surfaces).
  */
 export const colors = {
   green: '#1E7A3D',
@@ -12,8 +12,8 @@ export const colors = {
   greenSoft: '#E7F4EA', // chips / step circles
   greenTint: '#F4FAF5', // alternating section bg
 
-  orange: '#F47A20',
-  orangeDark: '#E16A12',
+  yellow: '#F5B301', // golden action color — pair with dark text
+  yellowDark: '#C98700', // deeper gold — required markers / accents on light bg
 
   ink: '#1F2937', // headings
   body: '#4B5563', // paragraphs

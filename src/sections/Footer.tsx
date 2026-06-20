@@ -5,11 +5,16 @@ import { colors } from '../theme';
 import { Container } from '../ui/Container';
 import { Logo } from '../ui/Logo';
 import { useResponsive } from '../hooks/useResponsive';
+import { useNav } from '../nav/NavProvider';
 import { FOOTER } from '../data';
 
 export function Footer() {
   const { isMobile, isTablet } = useResponsive();
+  const { navigate } = useNav();
   const colBasis = isMobile ? '50%' : isTablet ? '33%' : 'auto';
+
+  // The site is single-page; route the Privacy link to its page and other links home.
+  const handleLink = (link: string) => navigate(link === 'Privacy Policy' ? 'privacy' : 'home');
 
   return (
     <View style={styles.footer}>
@@ -17,9 +22,9 @@ export function Footer() {
         <View style={[styles.top, (isMobile || isTablet) && styles.topStack]}>
           {/* Brand block */}
           <View style={[styles.brand, (isMobile || isTablet) && styles.brandStack]}>
-            <Logo tone="dark" showTagline={false} />
+            <Logo tone="dark" showTagline={false} height={50} />
             <Text style={styles.brandText}>
-              Connecting farmers, sales executives and buyers for a stronger agricultural ecosystem.
+              Connecting farmers and buyers through the Magasool team, for a stronger agricultural ecosystem.
             </Text>
             <View style={styles.socials}>
               {FOOTER.socials.map((s) => (
@@ -36,7 +41,7 @@ export function Footer() {
               <View key={col.title} style={[styles.col, { flexBasis: colBasis as any }]}>
                 <Text style={styles.colTitle}>{col.title}</Text>
                 {col.links.map((link) => (
-                  <Pressable key={link} style={styles.linkWrap}>
+                  <Pressable key={link} style={styles.linkWrap} onPress={() => handleLink(link)}>
                     <Text style={styles.link}>{link}</Text>
                   </Pressable>
                 ))}

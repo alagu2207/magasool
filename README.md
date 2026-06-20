@@ -3,23 +3,13 @@
 A static marketing site for **Magasool** (*Green · Fresh · Candor*) — an agricultural
 brokerage platform that connects farmers, sales executives and buyers — built entirely
 with React Native components rendered to the web via **Expo + react-native-web**.
-It ships with **Farmer** and **Buyer** enquiry forms that email submissions through a
-small **Node + nodemailer** backend.
+It ships with **Farmer** and **Buyer** enquiry forms that save submissions straight
+into **Google Forms** (and their linked Google Sheets) — no backend required.
 
 ## Run it
 
 > Paste **one line at a time** — these are zsh commands, and zsh does not strip
 > `#` comments in an interactive shell.
-
-Terminal 1 — mail backend (Farmer/Buyer enquiries, runs on `http://localhost:3001`):
-
-```bash
-cd agriconnect/server
-npm install
-npm run dev
-```
-
-Terminal 2 — the website (dev server with hot reload):
 
 ```bash
 cd agriconnect
@@ -31,18 +21,15 @@ It also runs natively, unchanged: `npm run ios` / `npm run android`.
 
 ## Build the static website
 
-Outputs a self-contained static bundle to `./dist`. Set `EXPO_PUBLIC_API_URL` to
-your deployed mail API (it defaults to `http://localhost:3001`):
-
 ```bash
-EXPO_PUBLIC_API_URL=https://api.yourdomain.com npx expo export -p web
+npx expo export -p web
 npx serve dist
 ```
 
 `dist/` is a self-contained static bundle you can host on any static host
-(Netlify, Vercel, GitHub Pages, S3, …).
+(Netlify, Vercel, GitHub Pages, S3, …) — there's no server to deploy.
 
-## Enquiry forms & email (SMTP)
+## Enquiry forms → Google Forms
 
 Clicking **I'm a Farmer / I'm a Buyer** (hero and the bottom CTA) opens a modal form:
 
@@ -50,22 +37,22 @@ Clicking **I'm a Farmer / I'm a Buyer** (hero and the bottom CTA) opens a modal 
 |---|---|
 | Name, Phone, Address, City, Products sold, Farming land (cents), What you grow | Name, Address, Phone, Email, Products needed, Minimum quantity |
 
-On submit the site `POST`s to `server`'s `/api/submit`, which **routes the email by type**:
+On submit, the site posts the answers directly to a **Google Form** (`mode: 'no-cors'`),
+so every enquiry lands in that form's **Responses** sheet. Use two forms — one for
+farmers, one for buyers — to keep them in separate sheets.
 
-- Farmer enquiries → `FARMER_NOTIFY_EMAIL`
-- Buyer enquiries → `BUYER_NOTIFY_EMAIL`
+**Setup** (see the step-by-step header comment in [`src/forms/googleForms.ts`](src/forms/googleForms.ts)):
 
-Configure it (the `.env` is created for you; edit it to add SMTP creds + recipients):
+1. Create two Google Forms with the questions above. In each form's settings turn OFF
+   *Require sign in* / *Limit to 1 response* so anyone can submit.
+2. Form ⋮ → **Get pre-filled link**, type a unique dummy value in every box, copy the link.
+3. From the link, copy the `formId` (the `1FAIpQL…` part) and each `entry.NNNNN` id into
+   `GOOGLE_FORMS` in `src/forms/googleForms.ts` — or just send me the two pre-filled links.
 
-```bash
-cd server
-cp .env.example .env
-npm run dev
-```
+Until the ids are filled in, the form shows a "not configured" message instead of submitting.
 
-If `SMTP_HOST` is left blank the server runs in **dev mode** — submissions are logged
-to the console (and the form still shows success) so you can develop without creds.
-Set the `SMTP_*` vars (Gmail App Password, SendGrid, Mailgun, …) to send real mail.
+> The old email backend in `server/` is **no longer used** by the site. It's kept for
+> reference — delete the `server/` folder if you don't want it.
 
 ## Structure
 
@@ -74,13 +61,13 @@ App.tsx                     FormModalProvider + ScrollView of all sections
 src/
   theme.ts                  colors, spacing, radius, shadows
   data.ts                   page copy (steps, stats, testimonials…)
-  config.ts                 API_URL (EXPO_PUBLIC_API_URL)
   hooks/useResponsive.ts    isMobile / isTablet / isDesktop breakpoints
   ui/                       Container, Button, SectionHeading, Logo
-  forms/                    fields.ts, FormModal.tsx, FormModalProvider.tsx
+  forms/                    fields.ts, FormModal.tsx, FormModalProvider.tsx,
+                            googleForms.ts  ← put your Google Form ids here
   sections/                 Header, Hero, HowItWorks, StatsBar,
                             WhyChoose, Testimonials, CTABanner, Footer
-server/                     Express + nodemailer mail backend (.env.example)
+server/                     (legacy, unused) Express + nodemailer mail backend
 ```
 
 ## Notes
