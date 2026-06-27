@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { FormModal } from './FormModal';
 import { FormType } from './fields';
+import { trackEvent } from '../analytics/analytics';
 
 type Ctx = { openForm: (type: FormType) => void; closeForm: () => void };
 
@@ -9,7 +10,10 @@ const FormModalContext = createContext<Ctx>({ openForm: () => {}, closeForm: () 
 /** Wrap the app so any button can open the Farmer/Buyer enquiry forms. */
 export function FormModalProvider({ children }: { children: React.ReactNode }) {
   const [which, setWhich] = useState<FormType | null>(null);
-  const openForm = useCallback((type: FormType) => setWhich(type), []);
+  const openForm = useCallback((type: FormType) => {
+    trackEvent('form_open', { form: type });
+    setWhich(type);
+  }, []);
   const closeForm = useCallback(() => setWhich(null), []);
 
   return (

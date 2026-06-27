@@ -1,13 +1,13 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
 /** The app has no router; this is a tiny client-side page switcher. */
-export type Route = 'home' | 'privacy';
+export type Route = 'home' | 'about' | 'privacy' | 'products' | 'contact' | 'terms';
 
 type Ctx = { route: Route; navigate: (route: Route) => void };
 
 const NavContext = createContext<Ctx>({ route: 'home', navigate: () => {} });
 
-/** Wrap the app so the header/footer can switch between the home page and the Privacy Policy page. */
+/** Wrap the app so the header/footer can switch between the home, About Us, Products, and Privacy Policy pages. */
 export function NavProvider({ children }: { children: React.ReactNode }) {
   const [route, setRoute] = useState<Route>('home');
   const navigate = useCallback((r: Route) => setRoute(r), []);

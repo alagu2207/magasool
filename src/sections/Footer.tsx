@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme';
 import { Container } from '../ui/Container';
 import { Logo } from '../ui/Logo';
 import { useResponsive } from '../hooks/useResponsive';
 import { useNav } from '../nav/NavProvider';
+import { trackEvent } from '../analytics/analytics';
 import { FOOTER } from '../data';
 
 export function Footer() {
@@ -13,8 +14,18 @@ export function Footer() {
   const { navigate } = useNav();
   const colBasis = isMobile ? '50%' : isTablet ? '33%' : 'auto';
 
-  // The site is single-page; route the Privacy link to its page and other links home.
-  const handleLink = (link: string) => navigate(link === 'Privacy Policy' ? 'privacy' : 'home');
+  // The site is single-page; route known links to their pages and others home.
+  const handleLink = (link: string) => {
+    trackEvent('footer_link_click', { link });
+    const route =
+      link === 'Privacy Policy' ? 'privacy'
+      : link === 'About Us' ? 'about'
+      : link === 'Products' ? 'products'
+      : link === 'Terms & Conditions' ? 'terms'
+      : link === 'Contact Us' || link === 'Contact Support' ? 'contact'
+      : 'home';
+    navigate(route);
+  };
 
   return (
     <View style={styles.footer}>
@@ -28,8 +39,17 @@ export function Footer() {
             </Text>
             <View style={styles.socials}>
               {FOOTER.socials.map((s) => (
-                <Pressable key={s} style={styles.socialBtn}>
-                  <Ionicons name={s as any} size={16} color={colors.white} />
+                <Pressable
+                  key={s.label}
+                  style={styles.socialBtn}
+                  accessibilityRole="link"
+                  accessibilityLabel={s.label}
+                  onPress={() => {
+                    trackEvent('social_click', { network: s.label, location: 'footer' });
+                    Linking.openURL(s.url);
+                  }}
+                >
+                  <Ionicons name={s.icon} size={16} color={colors.white} />
                 </Pressable>
               ))}
             </View>

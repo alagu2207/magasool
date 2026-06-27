@@ -3,11 +3,12 @@ import {
   Modal, View, Text, StyleSheet, TextInput, Pressable, ScrollView, ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, shadow } from '../theme';
+import { colors, radius, shadow, glass, glassShadow } from '../theme';
 import { Button } from '../ui/Button';
 import { sound } from '../ui/sound';
 import { FORM_META, FormType, Field } from './fields';
 import { GOOGLE_FORMS, isFormConfigured, formResponseUrl, buildFormBody } from './googleForms';
+import { trackEvent } from '../analytics/analytics';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -61,7 +62,14 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
   };
 
   const submit = async () => {
-    if (!validate()) return;
+    // Note: we intentionally send only the form type (no names/phones/emails) to
+    // analytics to avoid passing PII to GA/Meta.
+    trackEvent('form_submit_attempt', { form: which });
+
+    if (!validate()) {
+      trackEvent('form_validation_error', { form: which });
+      return;
+    }
 
     const cfg = GOOGLE_FORMS[which];
     if (!isFormConfigured(cfg)) {
@@ -83,8 +91,11 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
         body: buildFormBody(cfg, values),
       });
       setStatus('success');
+      // Successful lead — fire conversion in GA4 and as a Meta standard "Lead" event.
+      trackEvent('form_submit', { form: which }, 'Lead');
     } catch (e: any) {
       setStatus('error');
+      trackEvent('form_submit_error', { form: which });
       setServerError(
         e?.message?.includes('Failed to fetch')
           ? 'Could not reach Google. Check your internet connection and try again.'
@@ -93,11 +104,12 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
     }
   };
 
-  const isFarmer = which === 'farmer';
-  const accent = isFarmer ? colors.green : colors.yellow;
+  // Buyer uses the golden buyer accent; farmer and contact use brand green.
+  const isYellow = which === 'buyer';
+  const accent = isYellow ? colors.yellow : colors.green;
   // Text/icons sitting on top of the accent: white on green, dark on yellow.
-  const onAccent = isFarmer ? colors.white : colors.greenDark;
-  const onAccentSub = isFarmer ? 'rgba(255,255,255,0.9)' : 'rgba(17,51,31,0.72)';
+  const onAccent = isYellow ? colors.greenDark : colors.white;
+  const onAccentSub = isYellow ? 'rgba(17,51,31,0.72)' : 'rgba(255,255,255,0.9)';
 
   return (
     <Modal visible transparent animationType="fade" onRequestClose={onClose}>
@@ -124,7 +136,7 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
               <Text style={styles.successText}>
                 We've received your details. Our team will reach out to you shortly to take the next step.
               </Text>
-              <Button label="Done" variant={isFarmer ? 'green' : 'yellow'} full onPress={onClose} style={{ marginTop: 18 }} />
+              <Button label="Done" variant={isYellow ? 'yellow' : 'green'} full onPress={onClose} style={{ marginTop: 18 }} />
             </View>
           ) : (
             <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent} keyboardShouldPersistTaps="handled">
@@ -161,7 +173,7 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
 
               <Button
                 label={status === 'submitting' ? 'Submitting…' : meta.submitLabel}
-                variant={isFarmer ? 'green' : 'yellow'}
+                variant={isYellow ? 'yellow' : 'green'}
                 icon="paper-plane-outline"
                 full
                 onPress={submit}
@@ -179,19 +191,30 @@ export function FormModal({ which, onClose }: { which: FormType | null; onClose:
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(17,40,28,0.55)',
+    backgroundColor: 'rgba(17,40,28,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 16,
+    // web-only: frost the page sitting behind the modal
+    // @ts-ignore
+    backdropFilter: 'blur(6px)',
+    // @ts-ignore
+    WebkitBackdropFilter: 'blur(6px)',
   },
   card: {
     width: '100%',
     maxWidth: 460,
     maxHeight: '88%',
-    backgroundColor: colors.white,
+    backgroundColor: glass.fillStrong,
     borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: glass.border,
     overflow: 'hidden',
-    ...shadow.card,
+    // @ts-ignore web-only frosted-glass blur
+    backdropFilter: 'blur(22px) saturate(140%)',
+    // @ts-ignore
+    WebkitBackdropFilter: 'blur(22px) saturate(140%)',
+    ...glassShadow,
   },
   header: { flexDirection: 'row', alignItems: 'flex-start', paddingHorizontal: 22, paddingVertical: 20 },
   title: { color: colors.white, fontSize: 20, fontWeight: '800' },

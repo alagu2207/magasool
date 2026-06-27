@@ -1,10 +1,11 @@
 import React from 'react';
 import { Pressable, Text, StyleSheet, ViewStyle, StyleProp, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius } from '../theme';
+import { colors, radius, glass } from '../theme';
 import { sound } from './sound';
+import { trackClick } from '../analytics/analytics';
 
-type Variant = 'green' | 'yellow' | 'outline' | 'ghost';
+type Variant = 'green' | 'yellow' | 'outline' | 'ghost' | 'glass';
 type Size = 'sm' | 'md' | 'lg';
 
 type Props = {
@@ -27,18 +28,28 @@ export function Button({ label, variant = 'green', size = 'md', icon, onPress, s
   const pad = PAD[size];
   const isOutline = variant === 'outline';
   const isGhost = variant === 'ghost';
+  const isGlass = variant === 'glass';
   const bg =
-    variant === 'green' ? colors.green : variant === 'yellow' ? colors.yellow : 'transparent';
+    variant === 'green'
+      ? colors.green
+      : variant === 'yellow'
+      ? colors.yellow
+      : isGlass
+      ? glass.fillStrong
+      : 'transparent';
   const fg = isOutline
     ? colors.ink
     : isGhost
     ? colors.green
+    : isGlass
+    ? colors.ink
     : variant === 'yellow'
     ? colors.greenDark // dark text reads on the golden background
     : colors.white;
 
   const handlePress = () => {
     sound.click();
+    trackClick(label, { component: 'button', variant });
     onPress?.();
   };
 
@@ -52,10 +63,17 @@ export function Button({ label, variant = 'green', size = 'md', icon, onPress, s
           backgroundColor: bg,
           paddingVertical: pad.py,
           paddingHorizontal: pad.px,
-          borderWidth: isOutline ? 1 : 0,
-          borderColor: colors.border,
+          borderWidth: isOutline || isGlass ? 1 : 0,
+          borderColor: isGlass ? glass.border : colors.border,
           opacity: pressed ? 0.85 : 1,
           alignSelf: full ? 'stretch' : 'flex-start',
+          // web-only frosted-glass blur for the glass variant
+          ...(isGlass
+            ? ({
+                backdropFilter: 'blur(14px) saturate(140%)',
+                WebkitBackdropFilter: 'blur(14px) saturate(140%)',
+              } as any)
+            : null),
         },
         style,
       ]}

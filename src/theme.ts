@@ -64,6 +64,29 @@ export const shadow = {
   },
 } as const;
 
+/**
+ * Glassmorphism tokens (web). Frosted translucent surfaces — pair the `fill`
+ * with a `backdropFilter` blur and a hairline light `border` for the "glass"
+ * look. Inspired by GlassyUI. Reads best over tinted sections, imagery, or a
+ * dimmed modal backdrop (it needs something behind it to blur).
+ */
+export const glass = {
+  fill: 'rgba(255,255,255,0.55)', // cards/panels over tinted backgrounds
+  fillStrong: 'rgba(255,255,255,0.74)', // header / modal — needs more legibility
+  border: 'rgba(255,255,255,0.65)', // bright top highlight edge
+  borderSoft: 'rgba(255,255,255,0.4)',
+  blur: 14, // backdrop blur radius (px)
+  blurStrong: 22,
+} as const;
+
+export const glassShadow = {
+  shadowColor: '#0E2C1A',
+  shadowOpacity: 0.12,
+  shadowRadius: 24,
+  shadowOffset: { width: 0, height: 12 },
+  elevation: 6,
+} as const;
+
 export const font = {
   // System stack keeps the static site dependency-free.
   family: undefined as undefined | string,

@@ -8,7 +8,7 @@ export type Field = {
   required?: boolean;
 };
 
-export type FormType = 'farmer' | 'buyer';
+export type FormType = 'farmer' | 'buyer' | 'contact';
 
 export const FARMER_FIELDS: Field[] = [
   { key: 'name', label: 'Name', placeholder: 'Your full name', type: 'text', required: true },
@@ -29,6 +29,12 @@ export const BUYER_FIELDS: Field[] = [
   { key: 'minQty', label: 'Minimum quantity needed', placeholder: 'e.g. 500 kg / 2 ton', type: 'text', required: true },
 ];
 
+export const CONTACT_FIELDS: Field[] = [
+  { key: 'name', label: 'Name', placeholder: 'Your full name', type: 'text', required: true },
+  { key: 'phone', label: 'Contact Number', placeholder: 'e.g. 98765 43210', type: 'phone', required: true },
+  { key: 'queries', label: 'Your Query', placeholder: 'How can we help you?', type: 'multiline', required: true },
+];
+
 export const FORM_META: Record<FormType, { title: string; subtitle: string; fields: Field[]; submitLabel: string }> = {
   farmer: {
     title: "I'm a Farmer",
@@ -41,5 +47,11 @@ export const FORM_META: Record<FormType, { title: string; subtitle: string; fiel
     subtitle: 'Tell us what you need — we will source it at the best price.',
     fields: BUYER_FIELDS,
     submitLabel: 'Submit as Buyer',
+  },
+  contact: {
+    title: 'Send us a Message',
+    subtitle: "Share your query and our team will get back to you.",
+    fields: CONTACT_FIELDS,
+    submitLabel: 'Send Message',
   },
 };

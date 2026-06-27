@@ -32,26 +32,34 @@ export type GoogleFormConfig = {
 
 export const GOOGLE_FORMS: Record<FormType, GoogleFormConfig> = {
   farmer: {
-    formId: '1FAIpQLSc_nLLmsfdLBTT8xW_gpFRqFALe0yHjmTLETivuPw2AlUU-6A',
+    formId: '1FAIpQLSd8ldWqJ3TWgVsw4yvego1T1_FSrWcEGuTMll_qUjDN_Z_Y0g',
     entries: {
-      name: 'entry.1121097073',
-      phone: 'entry.1935914499',
-      address: 'entry.1232655838',
-      city: 'entry.1807828819',
-      products: 'entry.1428403698',
-      landCents: 'entry.700531819',
-      crops: 'entry.663087225',
+      name: 'entry.136832847',
+      phone: 'entry.338783156',
+      address: 'entry.1818185010',
+      city: 'entry.1926930666',
+      products: 'entry.1032204383',
+      landCents: 'entry.1540200311',
+      crops: 'entry.1182763448',
     },
   },
   buyer: {
-    formId: '',
+    formId: '1FAIpQLScRgt-8xdtDUY9zET5XVeIw1Y76j-2HJ6p9_Aw4om66qlYgYQ',
     entries: {
-      name: '',
-      address: '',
-      phone: '',
-      email: '',
-      products: '',
-      minQty: '',
+      name: 'entry.210713356',
+      address: 'entry.496588672',
+      phone: 'entry.125984025',
+      email: 'entry.506085501',
+      products: 'entry.822988067',
+      minQty: 'entry.1604935352',
+    },
+  },
+  contact: {
+    formId: '1FAIpQLSczaGXyjHEYMd4khl1x6xzBj2bs1UtXtGKKKehPwHf2U0uIjw',
+    entries: {
+      name: 'entry.1825031473',
+      phone: 'entry.916747599',
+      queries: 'entry.1282967673',
     },
   },
 };

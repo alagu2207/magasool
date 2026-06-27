@@ -1,6 +1,6 @@
 /** All landing-page copy in one place so sections stay presentational. */
 
-export const NAV = ['Home', 'About', 'How It Works', 'Products', 'Contact'];
+export const NAV = ['About Us', 'Products', 'Contact Us', 'Privacy Policy', 'Terms & Conditions'];
 
 export const HERO_BADGES = [
   { icon: 'shield-checkmark' as const, label: 'Verified Network' },
@@ -122,6 +122,225 @@ export const TESTIMONIALS = [
   },
 ];
 
+/**
+ * Products marketplace listing.
+ *
+ * `image` is a bundled local asset (see assets/products/) so the photos load
+ * instantly and work offline — no runtime image downloads. Every listing carries
+ * a 50 kg minimum order, per Magasool's bulk-trade model.
+ */
+const MIN_ORDER_KG = 50;
+
+export const PRODUCTS_INTRO = {
+  eyebrow: 'Our Products',
+  title: 'Fresh Farm Produce, Sourced in Bulk',
+  subtitle:
+    'Quality produce sourced directly from verified farmers. All listings are available for bulk trade with a minimum order of 50 kg.',
+};
+
+export const PRODUCTS = [
+  {
+    name: 'Banana',
+    tamil: 'வாழைப்பழம்',
+    image: require('../assets/products/banana.jpg'),
+    desc: 'Naturally ripened, sweet bananas harvested at peak freshness. Ideal for retail, juice units, and wholesale distribution.',
+    minKg: MIN_ORDER_KG,
+  },
+  {
+    name: 'Banana Leaves',
+    tamil: 'வாழை இலை',
+    image: require('../assets/products/banana-leaves.jpg'),
+    desc: 'Broad, fresh green banana leaves — perfect for traditional dining, catering, and eco-friendly food packaging.',
+    minKg: MIN_ORDER_KG,
+  },
+  {
+    name: 'Banana Stem',
+    tamil: 'வாழைத்தண்டு',
+    image: require('../assets/products/banana-stem.jpg'),
+    desc: 'Tender, fibre-rich banana stem (vazhaithandu) known for its health benefits. Supplied fresh for hotels and households.',
+    minKg: MIN_ORDER_KG,
+  },
+  {
+    name: 'Potato',
+    tamil: 'உருளைக்கிழங்கு',
+    image: require('../assets/products/potato.jpg'),
+    desc: 'Firm, farm-fresh potatoes graded for size and quality. Suited for retail, restaurants, and food processing.',
+    minKg: MIN_ORDER_KG,
+  },
+  {
+    name: 'Tomato',
+    tamil: 'தக்காளி',
+    image: require('../assets/products/tomato.jpg'),
+    desc: 'Plump, juicy red tomatoes picked fresh from the farm. Great for daily markets, hotels, and bulk supply.',
+    minKg: MIN_ORDER_KG,
+  },
+  {
+    name: 'Small Onion',
+    tamil: 'சின்ன வெங்காயம்',
+    image: require('../assets/products/small-onion.jpg'),
+    desc: 'Aromatic small onions (shallots) with a rich flavour, widely used in South Indian cooking and sambar.',
+    minKg: MIN_ORDER_KG,
+  },
+  {
+    name: 'Bellary Onion',
+    tamil: 'பெரிய வெங்காயம்',
+    image: require('../assets/products/bellary-onion.jpg'),
+    desc: 'Large Bellary (big) onions with firm layers and long shelf life. Reliable supply for wholesale and retail buyers.',
+    minKg: MIN_ORDER_KG,
+  },
+  {
+    name: 'Garlic',
+    tamil: 'பூண்டு',
+    image: require('../assets/products/garlic.jpg'),
+    desc: 'Clean, fresh garlic bulbs with strong aroma and tight cloves. Available for kitchens, traders, and processors.',
+    minKg: MIN_ORDER_KG,
+  },
+  {
+    name: 'Keerai Varieties',
+    tamil: 'கீரை வகைகள்',
+    image: require('../assets/products/keerai.jpg'),
+    desc: 'Assorted fresh greens (keerai) — including mulai, arai, and palak — bundled fresh daily for healthy bulk demand.',
+    minKg: MIN_ORDER_KG,
+  },
+] as const;
+
+/** Contact Us page content. */
+export const CONTACT = {
+  title: 'Contact Us',
+  subtitle:
+    "We'd love to hear from you. Whether you're a farmer or a buyer, our team is here to help you connect and grow.",
+  intro:
+    'Have a question about selling your produce, sourcing in bulk, or how Magasool works? Reach out through any of the channels below and our team will get back to you shortly.',
+  phone: '+91 97905 75351',
+  email: 'Supportmagasool@gmail.com',
+  methods: [
+    { icon: 'call' as const, label: 'Call Us', value: '+91 97905 75351', href: 'tel:+919790575351' },
+    { icon: 'mail' as const, label: 'Email Us', value: 'Supportmagasool@gmail.com', href: 'mailto:Supportmagasool@gmail.com' },
+    { icon: 'location' as const, label: 'Location', value: 'Tamil Nadu, India', href: '' },
+    { icon: 'time' as const, label: 'Working Hours', value: 'Mon – Sat, 9:00 AM – 6:00 PM', href: '' },
+  ],
+};
+
+/**
+ * Terms & Conditions page content. Uses the same block shape as PRIVACY
+ * ('p' for paragraphs, 'list' for bullet lists) so it renders consistently.
+ */
+export const TERMS = {
+  title: 'Terms & Conditions',
+  effective: 'Last updated: June 25, 2026',
+  contact: { phone: '+91 97905 75351', email: 'Supportmagasool@gmail.com' },
+  intro: [
+    'Welcome to Magasool. These Terms & Conditions ("Terms") govern your access to and use of our website and mediation services that connect farmers with buyers and distributors.',
+    'By accessing or using our platform, you agree to be bound by these Terms. If you do not agree, please do not use our services.',
+  ],
+  sections: [
+    {
+      id: 'acceptance',
+      icon: 'checkmark-circle' as const,
+      title: 'Acceptance of Terms',
+      blocks: [
+        { type: 'p' as const, text: 'By registering, accessing, or using the Magasool platform, you confirm that you have read, understood, and agree to these Terms and our Privacy Policy.' },
+      ],
+    },
+    {
+      id: 'services',
+      icon: 'people' as const,
+      title: 'Our Role',
+      blocks: [
+        { type: 'p' as const, text: 'Magasool acts solely as a mediation platform that facilitates connections between farmers and buyers/distributors. We are not a buyer, seller, or party to any transaction between users.' },
+        { type: 'p' as const, text: 'We coordinate introductions and support communication, but the final agreement, pricing, quality, and delivery terms are decided between the farmer and the buyer.' },
+      ],
+    },
+    {
+      id: 'eligibility',
+      icon: 'person-circle' as const,
+      title: 'Eligibility',
+      blocks: [
+        { type: 'p' as const, text: 'To use our services you must:' },
+        { type: 'list' as const, items: ['Be at least 18 years of age', 'Provide accurate and complete registration details', 'Have the legal capacity to enter into binding agreements'] },
+      ],
+    },
+    {
+      id: 'responsibilities',
+      icon: 'clipboard' as const,
+      title: 'User Responsibilities',
+      blocks: [
+        { type: 'p' as const, text: 'As a user of the platform, you agree to:' },
+        { type: 'list' as const, items: ['Provide truthful information about your produce or requirements', 'Honour commitments made to other users', 'Maintain the confidentiality of your account details', 'Use the platform only for lawful agricultural trade purposes'] },
+      ],
+    },
+    {
+      id: 'charges',
+      icon: 'cash' as const,
+      title: 'Service Charges & Payments',
+      blocks: [
+        { type: 'p' as const, text: 'Magasool may charge a service or mediation fee for successful connections or transactions. Applicable charges will be communicated in advance.' },
+        { type: 'p' as const, text: 'Payments between farmers and buyers are settled directly between the parties unless otherwise agreed in writing.' },
+      ],
+    },
+    {
+      id: 'prohibited',
+      icon: 'ban' as const,
+      title: 'Prohibited Activities',
+      blocks: [
+        { type: 'p' as const, text: 'You must not:' },
+        { type: 'list' as const, items: ['Post false, misleading, or fraudulent information', 'Misuse the platform to harass or harm other users', 'Bypass the platform to avoid applicable service charges in bad faith', 'Violate any applicable laws or regulations'] },
+      ],
+    },
+    {
+      id: 'liability',
+      icon: 'shield-checkmark' as const,
+      title: 'Limitation of Liability',
+      blocks: [
+        { type: 'p' as const, text: 'Magasool is not responsible for the quality, quantity, safety, or legality of produce, the accuracy of user listings, or the ability of users to complete a transaction.' },
+        { type: 'p' as const, text: 'To the maximum extent permitted by law, Magasool shall not be liable for any direct, indirect, or consequential losses arising from the use of our services.' },
+      ],
+    },
+    {
+      id: 'ip',
+      icon: 'pricetag' as const,
+      title: 'Intellectual Property',
+      blocks: [
+        { type: 'p' as const, text: 'All content, branding, and materials on the Magasool platform are owned by or licensed to Magasool and may not be copied or reused without permission.' },
+      ],
+    },
+    {
+      id: 'termination',
+      icon: 'close-circle' as const,
+      title: 'Termination',
+      blocks: [
+        { type: 'p' as const, text: 'We reserve the right to suspend or terminate any account that violates these Terms or misuses the platform, without prior notice.' },
+      ],
+    },
+    {
+      id: 'law',
+      icon: 'business' as const,
+      title: 'Governing Law',
+      blocks: [
+        { type: 'p' as const, text: 'These Terms are governed by the laws of India. Any disputes shall be subject to the jurisdiction of the courts of Tamil Nadu.' },
+      ],
+    },
+    {
+      id: 'changes',
+      icon: 'sync' as const,
+      title: 'Changes to these Terms',
+      blocks: [
+        { type: 'p' as const, text: 'We may update these Terms from time to time. Continued use of the platform after changes are posted constitutes acceptance of the revised Terms.' },
+      ],
+    },
+  ],
+  closing: 'By using Magasool, you acknowledge that you have read and agree to these Terms & Conditions.',
+} as const;
+
+/**
+ * Social profiles, shared by the footer and the Contact page.
+ * Replace the URLs with Magasool's real profile links.
+ */
+export const SOCIALS = [
+  { icon: 'logo-facebook' as const, label: 'Facebook', url: 'https://www.facebook.com/share/1BmFs3STzC/' },
+  { icon: 'logo-instagram' as const, label: 'Instagram', url: 'https://www.instagram.com/magasool.india' },
+];
+
 export const FOOTER = {
   columns: [
     { title: 'Quick Links', links: ['Home', 'About Us', 'How It Works', 'Products', 'Contact Us'] },
@@ -129,7 +348,7 @@ export const FOOTER = {
     { title: 'For Buyers', links: ['Submit Requirement', 'Find Products', 'Buyer Support', 'Log in'] },
     { title: 'Support', links: ['Help Center', 'Terms & Conditions', 'Privacy Policy', 'Contact Support'] },
   ],
-  socials: ['logo-facebook', 'logo-twitter', 'logo-linkedin', 'logo-instagram'] as const,
+  socials: SOCIALS,
 };
 
 /**
@@ -139,7 +358,7 @@ export const FOOTER = {
 export const PRIVACY = {
   title: 'Privacy Policy',
   effective: 'Last updated: June 20, 2026',
-  contact: { phone: '+91 97905 75351', email: 'suppormagasool@gmail.com' },
+  contact: { phone: '+91 97905 75351', email: 'Supportmagasool@gmail.com' },
   intro: [
     'Welcome to Magasool ("Company", "we", "our", or "us"). We are committed to protecting the privacy and personal information of farmers, buyers, distributors, and other users who access our website and services.',
     'This Privacy Policy explains how we collect, use, store, disclose, and protect your personal information when you use our platform.',
@@ -154,7 +373,7 @@ export const PRIVACY = {
       blocks: [
         {
           type: 'p',
-          text: 'This mediation platform is named and created by Magasool. Helping farmers and buyers/distributors gain access to better market opportunities and to source quality agricultural products at competitive prices. For any privacy related queries, contact us at +91 97905 75351 or suppormagasool@gmail.com',
+          text: 'This mediation platform is named and created by Magasool. Helping farmers and buyers/distributors gain access to better market opportunities and to source quality agricultural products at competitive prices. For any privacy related queries, contact us at +91 97905 75351 or Supportmagasool@gmail.com',
         },
       ],
     },

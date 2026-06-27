@@ -1,29 +1,45 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, shadow } from '../theme';
+import { colors, shadow, glass } from '../theme';
 import { Container } from '../ui/Container';
 import { Logo } from '../ui/Logo';
 import { Button } from '../ui/Button';
 import { useResponsive } from '../hooks/useResponsive';
-import { useNav } from '../nav/NavProvider';
+import { useNav, Route } from '../nav/NavProvider';
+import { useFormModal } from '../forms/FormModalProvider';
+import { trackEvent } from '../analytics/analytics';
 import { NAV } from '../data';
+
+/** Map each header nav label to the page it opens. */
+const ROUTE_FOR: Record<string, Route> = {
+  'About Us': 'about',
+  Products: 'products',
+  'Contact Us': 'contact',
+  'Privacy Policy': 'privacy',
+  'Terms & Conditions': 'terms',
+};
 
 export function Header() {
   const { isMobile } = useResponsive();
   const { navigate } = useNav();
-  const [active, setActive] = useState('Home');
+  const { openForm } = useFormModal();
+  const [active, setActive] = useState('');
   const [open, setOpen] = useState(false);
 
-  // Home/About/etc. live on the home page; tapping a nav item returns there.
-  const go = (item: string) => { setActive(item); navigate('home'); };
+  const go = (item: string) => {
+    setActive(item);
+    trackEvent('nav_click', { item, location: 'header' });
+    navigate(ROUTE_FOR[item] ?? 'home');
+  };
 
   return (
     <View style={styles.bar}>
       <Container>
         <View style={styles.row}>
-          <Pressable onPress={() => go('Home')}>
-            <Logo height={isMobile ? 64 : 88} />
+          <Pressable onPress={() => go('Home')} style={styles.brand}>
+            <Logo height={isMobile ? 128 : 176} />
+            <Text style={[styles.brandTitle, { fontSize: isMobile ? 24 : 34 }]}>Magasool</Text>
           </Pressable>
 
           {!isMobile && (
@@ -42,8 +58,8 @@ export function Header() {
 
           {!isMobile ? (
             <View style={styles.actions}>
-              <Button label="Login" variant="outline" size="sm" icon="person-outline" />
-              <Button label="Register" variant="yellow" size="sm" icon="person-add-outline" style={{ marginLeft: 10 }} />
+              <Button label="Farmer" variant="green" size="sm" icon="leaf-outline" onPress={() => openForm('farmer')} />
+              <Button label="Buyer" variant="yellow" size="sm" icon="cart-outline" onPress={() => openForm('buyer')} style={{ marginLeft: 10 }} />
             </View>
           ) : (
             <Pressable onPress={() => setOpen((o) => !o)} style={styles.burger}>
@@ -60,8 +76,8 @@ export function Header() {
               </Pressable>
             ))}
             <View style={styles.mobileActions}>
-              <Button label="Login" variant="outline" size="sm" icon="person-outline" full style={{ flex: 1 }} />
-              <Button label="Register" variant="yellow" size="sm" icon="person-add-outline" full style={{ flex: 1, marginLeft: 10 }} />
+              <Button label="Farmer" variant="green" size="sm" icon="leaf-outline" full style={{ flex: 1 }} onPress={() => { openForm('farmer'); setOpen(false); }} />
+              <Button label="Buyer" variant="yellow" size="sm" icon="cart-outline" full style={{ flex: 1, marginLeft: 10 }} onPress={() => { openForm('buyer'); setOpen(false); }} />
             </View>
           </View>
         )}
@@ -72,14 +88,25 @@ export function Header() {
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: colors.white,
+    backgroundColor: glass.fillStrong,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: glass.borderSoft,
+    // web-only: frost content scrolling beneath the bar
+    // @ts-ignore
+    backdropFilter: 'blur(18px) saturate(140%)',
+    // @ts-ignore
+    WebkitBackdropFilter: 'blur(18px) saturate(140%)',
     ...shadow.soft,
+    // @ts-ignore web-only: pin the bar so the frosted blur reads as you scroll
+    position: 'sticky',
+    // @ts-ignore
+    top: 0,
     zIndex: 10,
   },
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: 10 as unknown as number },
+  brandTitle: { color: colors.green, fontWeight: '800', letterSpacing: -0.5 },
   nav: { flexDirection: 'row', alignItems: 'center', gap: 26 as unknown as number },
   navItem: { alignItems: 'center' },
   navText: { color: colors.body, fontSize: 14.5, fontWeight: '600' },

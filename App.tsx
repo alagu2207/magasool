@@ -12,11 +12,26 @@ import { WhyChoose } from './src/sections/WhyChoose';
 import { Testimonials } from './src/sections/Testimonials';
 import { CTABanner } from './src/sections/CTABanner';
 import { Footer } from './src/sections/Footer';
+import { AboutPage } from './src/sections/AboutPage';
+import { ProductsPage } from './src/sections/ProductsPage';
+import { ContactPage } from './src/sections/ContactPage';
+import { TermsPage } from './src/sections/TermsPage';
 import { PrivacyPolicy } from './src/sections/PrivacyPolicy';
 import { FormModalProvider } from './src/forms/FormModalProvider';
 import { NavProvider, useNav } from './src/nav/NavProvider';
 import { CustomCursor } from './src/ui/CustomCursor';
 import { Reveal } from './src/ui/Reveal';
+import { initAnalytics, trackPageView } from './src/analytics/analytics';
+
+/** Route -> URL path + readable title, used for analytics page views. */
+const PAGE_INFO: Record<string, { path: string; title: string }> = {
+  home: { path: '/', title: 'Home — Magasool' },
+  about: { path: '/about', title: 'About Us — Magasool' },
+  products: { path: '/products', title: 'Products — Magasool' },
+  contact: { path: '/contact', title: 'Contact Us — Magasool' },
+  terms: { path: '/terms', title: 'Terms & Conditions — Magasool' },
+  privacy: { path: '/privacy', title: 'Privacy Policy — Magasool' },
+};
 
 function Home() {
   return (
@@ -36,9 +51,16 @@ function AppShell() {
   const { route } = useNav();
   const scrollRef = useRef<ScrollView>(null);
 
-  // Jump to the top whenever the page changes so a new route starts at its header.
+  // Boot the analytics SDKs once, after the first render.
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
+  // Jump to the top whenever the page changes, and report the page view.
   useEffect(() => {
     scrollRef.current?.scrollTo({ y: 0, animated: false });
+    const info = PAGE_INFO[route] ?? { path: `/${route}`, title: route };
+    trackPageView(info.path, info.title);
   }, [route]);
 
   return (
@@ -52,7 +74,19 @@ function AppShell() {
         showsVerticalScrollIndicator={false}
       >
         <Header />
-        {route === 'privacy' ? <PrivacyPolicy /> : <Home />}
+        {route === 'privacy' ? (
+          <PrivacyPolicy />
+        ) : route === 'about' ? (
+          <AboutPage />
+        ) : route === 'products' ? (
+          <ProductsPage />
+        ) : route === 'contact' ? (
+          <ContactPage />
+        ) : route === 'terms' ? (
+          <TermsPage />
+        ) : (
+          <Home />
+        )}
         <Footer />
       </ScrollView>
     </View>
