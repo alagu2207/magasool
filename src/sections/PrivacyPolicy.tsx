@@ -136,7 +136,7 @@ export function PrivacyPolicy() {
                 <Ionicons name="arrow-back" size={15} color={colors.white} />
                 <Text style={styles.backText}>Back to Home</Text>
               </Pressable>
-              <Text style={styles.heroTitle}>{PRIVACY.title}</Text>
+              <Text style={[styles.heroTitle, isMobile && { fontSize: 27 }]}>{PRIVACY.title}</Text>
               <Text style={styles.heroSub}>
                 Your trust matters. Here is how Magasool collects, uses, and safeguards your information.
               </Text>

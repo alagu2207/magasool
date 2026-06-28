@@ -24,11 +24,17 @@ export function CustomCursor() {
       * { cursor: none !important; }
       .mg-cur { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 2147483647;
         border-radius: 9999px; transform: translate(-50%, -50%); will-change: transform; }
-      .mg-cur-dot { width: 8px; height: 8px; background: #1E7A3D; }
+      /* Green dot with a white halo + drop shadow so it stays visible on green,
+         white, golden and dark backgrounds alike. */
+      .mg-cur-dot { width: 9px; height: 9px; background: #1E7A3D;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.95), 0 1px 4px rgba(0,0,0,0.35); }
+      /* Golden ring kept consistent across all sections: a dark hairline outside
+         and a light hairline inside guarantee contrast on any colour. */
       .mg-cur-ring { width: 34px; height: 34px; border: 2px solid #F5B301;
-        transition: width .18s ease, height .18s ease, background-color .18s ease, border-color .18s ease, opacity .25s ease; }
-      .mg-cur-ring.is-hover { width: 54px; height: 54px; background: rgba(245,179,1,0.16); border-color: #1E7A3D; }
-      .mg-cur-ring.is-down { width: 26px; height: 26px; background: rgba(30,122,61,0.18); }
+        box-shadow: 0 0 0 1.5px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,255,255,0.65);
+        transition: width .18s ease, height .18s ease, background-color .18s ease, opacity .25s ease; }
+      .mg-cur-ring.is-hover { width: 54px; height: 54px; background: rgba(245,179,1,0.18); }
+      .mg-cur-ring.is-down { width: 26px; height: 26px; background: rgba(245,179,1,0.30); }
     `;
     document.head.appendChild(style);
 

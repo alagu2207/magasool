@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useFonts } from 'expo-font';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { colors } from './src/theme';
 import { Header } from './src/sections/Header';
@@ -94,6 +96,15 @@ function AppShell() {
 }
 
 export default function App() {
+  // Preload the icon fonts so glyphs never render blank on the web build.
+  // Both families are bundled and must be ready before the first paint;
+  // if loading errors for any reason, render anyway rather than block the site.
+  const [fontsLoaded, fontError] = useFonts({
+    ...Ionicons.font,
+    ...MaterialCommunityIcons.font,
+  });
+  if (!fontsLoaded && !fontError) return null;
+
   return (
     <NavProvider>
       <FormModalProvider>

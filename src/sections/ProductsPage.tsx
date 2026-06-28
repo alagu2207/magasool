@@ -42,7 +42,7 @@ export function ProductsPage() {
             <Text style={styles.backText}>Back to Home</Text>
           </Pressable>
           <Text style={styles.heroEyebrow}>{PRODUCTS_INTRO.eyebrow}</Text>
-          <Text style={styles.heroTitle}>{PRODUCTS_INTRO.title}</Text>
+          <Text style={[styles.heroTitle, isMobile && { fontSize: 26, lineHeight: 33 }]}>{PRODUCTS_INTRO.title}</Text>
           <Text style={styles.heroSub}>{PRODUCTS_INTRO.subtitle}</Text>
         </Container>
       </LinearGradient>

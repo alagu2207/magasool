@@ -49,7 +49,7 @@ export function TermsPage() {
                 <Ionicons name="arrow-back" size={15} color={colors.white} />
                 <Text style={styles.backText}>Back to Home</Text>
               </Pressable>
-              <Text style={styles.heroTitle}>{TERMS.title}</Text>
+              <Text style={[styles.heroTitle, isMobile && { fontSize: 27 }]}>{TERMS.title}</Text>
               <Text style={styles.heroSub}>
                 Please read these terms carefully before using the Magasool platform and services.
               </Text>

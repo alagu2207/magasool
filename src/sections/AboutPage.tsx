@@ -74,7 +74,7 @@ export function AboutPage() {
                 <Text style={styles.backText}>Back to Home</Text>
               </Pressable>
               <Text style={styles.heroEyebrow}>{ABOUT.eyebrow}</Text>
-              <Text style={styles.heroTitle}>{ABOUT.tagline}</Text>
+              <Text style={[styles.heroTitle, isMobile && { fontSize: 26, lineHeight: 33 }]}>{ABOUT.tagline}</Text>
               <Text style={styles.heroSub}>
                 Magasool is a trusted agricultural marketplace that connects farmers and buyers
                 through transparent coordination and dedicated support.

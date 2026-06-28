@@ -39,7 +39,7 @@ export function ContactPage() {
             <Text style={styles.backText}>Back to Home</Text>
           </Pressable>
           <Text style={styles.heroEyebrow}>Get In Touch</Text>
-          <Text style={styles.heroTitle}>{CONTACT.title}</Text>
+          <Text style={[styles.heroTitle, isMobile && { fontSize: 27, lineHeight: 34 }]}>{CONTACT.title}</Text>
           <Text style={styles.heroSub}>{CONTACT.subtitle}</Text>
         </Container>
       </LinearGradient>

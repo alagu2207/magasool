@@ -183,10 +183,15 @@ function HeroDecor({ compact }: { compact?: boolean }) {
 }
 
 export function Hero() {
-  const { isMobile, isTablet } = useResponsive();
+  const { isMobile, isTablet, width } = useResponsive();
   const { openForm } = useFormModal();
   const { height } = useWindowDimensions();
   const stack = isMobile || isTablet;
+
+  // Scale the headline down on phones (and a touch more on very small phones)
+  // so "Sell Smarter." never clips or wraps awkwardly.
+  const h1Size = width < 380 ? 32 : isMobile ? 38 : isTablet ? 42 : 46;
+  const h1Style = { fontSize: h1Size, lineHeight: Math.round(h1Size * 1.08) };
 
   // Fill the screen below the header so the green hero reads as one full-height panel.
   const headerOffset = isMobile ? 90 : 116;
@@ -200,8 +205,8 @@ export function Hero() {
           {/* Left: copy + CTAs */}
           <View style={[styles.left, stack && styles.leftStack]}>
             <Text style={styles.h1}>
-              <Text style={styles.h1Dark}>Sell Smarter.{'\n'}</Text>
-              <Text style={styles.h1Green}>Source Better.</Text>
+              <Text style={[styles.h1Dark, h1Style]}>Sell Smarter.{'\n'}</Text>
+              <Text style={[styles.h1Green, h1Style]}>Source Better.</Text>
             </Text>
             <Text style={styles.lead}>
               Magasool connects farmers and buyers through one trusted team — so produce

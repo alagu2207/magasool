@@ -1,6 +1,7 @@
 /** All landing-page copy in one place so sections stay presentational. */
 
-export const NAV = ['About Us', 'Products', 'Contact Us', 'Privacy Policy', 'Terms & Conditions'];
+// Privacy Policy & Terms live in the footer (Support column), not the header.
+export const NAV = ['About Us', 'Products', 'Contact Us'];
 
 export const HERO_BADGES = [
   { icon: 'shield-checkmark' as const, label: 'Verified Network' },
