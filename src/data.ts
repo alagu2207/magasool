@@ -203,6 +203,13 @@ export const PRODUCTS = [
     desc: 'Assorted fresh greens (keerai) — including mulai, arai, and palak — bundled fresh daily for healthy bulk demand.',
     minKg: MIN_ORDER_KG,
   },
+  {
+    name: 'Flowers',
+    tamil: 'மலர்கள்',
+    image: require('../assets/products/flowers.jpg'),
+    desc: 'Fresh, fragrant flowers such as marigold and jasmine — sourced daily for temples, events, garland makers, and bulk buyers.',
+    minKg: MIN_ORDER_KG,
+  },
 ] as const;
 
 /** Contact Us page content. */

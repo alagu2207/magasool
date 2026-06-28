@@ -1,8 +1,25 @@
 import React, { useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { useFonts } from 'expo-font';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+
+// Web: serve the icon fonts from a clean /fonts path. Expo's export emits them
+// under /assets/node_modules/... which Cloudflare Pages does NOT serve, so the
+// glyphs fall back to empty boxes. Declaring @font-face against our self-hosted
+// copies (public/fonts/*) fixes it. Family names are read from each icon set so
+// they always match what the <Icon> components request ('ionicons' etc.).
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
+  const faces: Array<[string, string]> = [
+    [Object.keys(Ionicons.font)[0], '/fonts/Ionicons.ttf'],
+    [Object.keys(MaterialCommunityIcons.font)[0], '/fonts/MaterialCommunityIcons.ttf'],
+  ];
+  const css = faces
+    .map(([family, url]) => `@font-face{font-family:'${family}';src:url('${url}') format('truetype');font-display:block;}`)
+    .join('');
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+}
 
 import { colors } from './src/theme';
 import { Header } from './src/sections/Header';
@@ -96,15 +113,6 @@ function AppShell() {
 }
 
 export default function App() {
-  // Preload the icon fonts so glyphs never render blank on the web build.
-  // Both families are bundled and must be ready before the first paint;
-  // if loading errors for any reason, render anyway rather than block the site.
-  const [fontsLoaded, fontError] = useFonts({
-    ...Ionicons.font,
-    ...MaterialCommunityIcons.font,
-  });
-  if (!fontsLoaded && !fontError) return null;
-
   return (
     <NavProvider>
       <FormModalProvider>
