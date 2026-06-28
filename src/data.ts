@@ -9,10 +9,20 @@ export const HERO_BADGES = [
   { icon: 'headset' as const, label: 'End-to-End Support' },
 ];
 
-export const HERO_FLOW = [
-  { emoji: '👨‍🌾', role: 'Farmer', desc: 'Lists fresh produce\nstraight from the farm', tint: '#E8F3E9' },
-  { emoji: '🧑‍💼', role: 'Magasool Team', desc: 'Connects, negotiates\n& checks quality', tint: '#E5F0FB' },
-  { emoji: '🧑‍🔧', role: 'Buyer', desc: 'Sources quality produce\nat a fair price', tint: '#FBEFE6' },
+type HeroFlowItem = {
+  emoji: string;
+  role: string;
+  desc: string;
+  tint: string;
+  image: number | null;
+  /** Optional cover zoom for the card image (1 = no zoom). */
+  imageScale?: number;
+};
+
+export const HERO_FLOW: HeroFlowItem[] = [
+  { emoji: '👨‍🌾', role: 'Farmer', desc: 'Lists fresh produce\nstraight from the farm', tint: '#E8F3E9', image: require('../assets/farmer.jpg'), imageScale: 1.18 },
+  { emoji: '🧑‍💼', role: 'Magasool Team', desc: 'Connects, negotiates\n& checks quality', tint: '#E5F0FB', image: require('../assets/team.jpg') },
+  { emoji: '🧑‍🔧', role: 'Buyer', desc: 'Sources quality produce\nat a fair price', tint: '#FBEFE6', image: require('../assets/buyer.png') },
 ];
 
 export const ABOUT = {

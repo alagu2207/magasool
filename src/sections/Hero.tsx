@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
+import { View, Text, Image, Platform, StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, shadow, radius } from '../theme';
+import { colors, radius } from '../theme';
 import { Container } from '../ui/Container';
 import { Button } from '../ui/Button';
 import { useResponsive } from '../hooks/useResponsive';
@@ -56,15 +56,32 @@ function FlowCard({
       style={[styles.flowCard, compact ? styles.flowCardCompact : styles.flowCardWide, { opacity: enter, transform: [{ translateY }] }]}
     >
       <View style={[styles.arch, compact && styles.archCompact, { backgroundColor: item.tint }]}>
-        <Animated.Text
-          style={[styles.archEmoji, compact && styles.archEmojiCompact, { transform: [{ translateY: emojiY }] }]}
-        >
-          {item.emoji}
-        </Animated.Text>
+        {item.image ? (
+          <Image
+            source={item.image}
+            style={[styles.archImage, item.imageScale ? { transform: [{ scale: item.imageScale }] } : null]}
+            resizeMode="cover"
+            accessibilityLabel={item.role}
+          />
+        ) : (
+          <Animated.Text
+            style={[styles.archEmoji, compact && styles.archEmojiCompact, { transform: [{ translateY: emojiY }] }]}
+          >
+            {item.emoji}
+          </Animated.Text>
+        )}
       </View>
       <Text style={styles.flowRole}>{item.role}</Text>
       <Text style={styles.flowDesc}>{item.desc}</Text>
     </Animated.View>
+  );
+}
+
+function Arrow() {
+  return (
+    <View style={styles.arrow}>
+      <Ionicons name="arrow-forward" size={20} color={colors.greenAccent} />
+    </View>
   );
 }
 
@@ -82,14 +99,6 @@ function PulseCTA({ children }: { children: React.ReactNode }) {
     return () => loop.stop();
   }, [scale]);
   return <Animated.View style={{ transform: [{ scale }], alignSelf: 'flex-start' }}>{children}</Animated.View>;
-}
-
-function Arrow() {
-  return (
-    <View style={styles.arrow}>
-      <Ionicons name="arrow-forward" size={20} color={colors.greenAccent} />
-    </View>
-  );
 }
 
 type Pos = { top?: number; left?: number; right?: number; bottom?: number };
@@ -198,7 +207,20 @@ export function Hero() {
   const minHeight = Math.max(height - headerOffset, 520);
 
   return (
-    <LinearGradient colors={['#F1F8F1', '#FBFEFB', '#FFFFFF']} style={[styles.bg, { minHeight }]}>
+    <View style={[styles.bg, { minHeight }]}>
+      {/* Background: looping video on web, GIF fallback on native */}
+      {Platform.OS === 'web' ? (
+        React.createElement('video', {
+          src: '/hero-bg.mp4',
+          autoPlay: true,
+          loop: true,
+          muted: true,
+          playsInline: true,
+          style: { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' },
+        })
+      ) : (
+        <Image source={require('../../assets/hero-bg.gif')} style={StyleSheet.absoluteFill} resizeMode="cover" />
+      )}
       <HeroDecor compact={isMobile} />
       <Container>
         <View style={[styles.row, stack && styles.rowStack]}>
@@ -258,12 +280,12 @@ export function Hero() {
         colors={['rgba(120,180,120,0.0)', '#CDE6C4', '#A9D69A']}
         style={styles.field}
       />
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  bg: { width: '100%', paddingTop: 48, position: 'relative', overflow: 'hidden', justifyContent: 'center' },
+  bg: { width: '100%', paddingTop: 48, position: 'relative', overflow: 'hidden', justifyContent: 'center', backgroundColor: '#000' },
   row: { flexDirection: 'row', alignItems: 'center', paddingBottom: 70 },
   rowStack: { flexDirection: 'column', paddingBottom: 56 },
 
@@ -271,9 +293,15 @@ const styles = StyleSheet.create({
   leftStack: { paddingRight: 0, alignItems: 'flex-start', marginBottom: 36 },
 
   h1: { marginBottom: 18 },
-  h1Dark: { fontSize: 46, fontWeight: '800', color: colors.ink, letterSpacing: -1, lineHeight: 50 },
-  h1Green: { fontSize: 46, fontWeight: '800', color: colors.greenAccent, letterSpacing: -1, lineHeight: 50 },
-  lead: { fontSize: 16, lineHeight: 25, color: colors.body, maxWidth: 460, marginBottom: 26 },
+  h1Dark: {
+    fontSize: 46, fontWeight: '800', color: colors.ink, letterSpacing: -1, lineHeight: 50,
+    textShadowColor: 'rgba(255,255,255,0.9)', textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8,
+  },
+  h1Green: {
+    fontSize: 46, fontWeight: '800', color: colors.greenAccent, letterSpacing: -1, lineHeight: 50,
+    textShadowColor: 'rgba(255,255,255,0.9)', textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 8,
+  },
+  lead: { fontSize: 16, lineHeight: 25, color: '#fff', fontWeight: '600', maxWidth: 460, marginBottom: 26 },
 
   ctaRow: { flexDirection: 'row', marginBottom: 26 },
   ctaRowStack: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 as unknown as number },
@@ -284,7 +312,7 @@ const styles = StyleSheet.create({
     width: 22, height: 22, borderRadius: 11, backgroundColor: colors.greenSoft,
     alignItems: 'center', justifyContent: 'center', marginRight: 7,
   },
-  badgeText: { fontSize: 13, color: colors.body, fontWeight: '600' },
+  badgeText: { fontSize: 13, color: '#fff', fontWeight: '700' },
 
   right: { flex: 1.05, alignItems: 'center' },
   rightStack: { width: '100%' },
@@ -292,14 +320,11 @@ const styles = StyleSheet.create({
   flowRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center', width: '100%' },
   flowRowCompact: { justifyContent: 'space-between', width: '100%' },
   flowCard: {
-    backgroundColor: colors.white,
+    backgroundColor: 'transparent',
     borderRadius: radius.md,
     paddingBottom: 18,
     paddingTop: 0,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.border,
-    ...shadow.card,
     overflow: 'hidden',
   },
   flowCardCompact: { width: '31.5%' },
@@ -312,12 +337,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 14,
+    overflow: 'hidden',
   },
   archCompact: { height: 96, borderTopLeftRadius: 48, borderTopRightRadius: 48 },
+  archImage: { width: '100%', height: '100%' },
   archEmoji: { fontSize: 84 },
   archEmojiCompact: { fontSize: 40 },
-  flowRole: { fontSize: 17, fontWeight: '800', color: colors.ink, marginBottom: 5 },
-  flowDesc: { fontSize: 12.5, lineHeight: 18, color: colors.muted, textAlign: 'center', paddingHorizontal: 6 },
+  flowRole: { fontSize: 17, fontWeight: '800', color: '#fff', marginBottom: 5 },
+  flowDesc: { fontSize: 12.5, lineHeight: 18, color: '#fff', textAlign: 'center', paddingHorizontal: 6 },
   arrow: { alignSelf: 'center', marginTop: 80, marginHorizontal: 4 },
 
   trustWrap: { flexDirection: 'row', alignItems: 'center', marginTop: 22 },
@@ -325,7 +352,7 @@ const styles = StyleSheet.create({
     width: 26, height: 26, borderRadius: 13, backgroundColor: colors.greenAccent,
     alignItems: 'center', justifyContent: 'center', marginRight: 9,
   },
-  trustText: { color: colors.greenDeep, fontWeight: '700', fontSize: 14 },
+  trustText: { color: '#fff', fontWeight: '700', fontSize: 14 },
 
   field: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 84 },
 });
