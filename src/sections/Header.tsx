@@ -10,10 +10,9 @@ import { useFormModal } from '../forms/FormModalProvider';
 import { trackEvent } from '../analytics/analytics';
 import { NAV } from '../data';
 
-/** Intrinsic ratios of the cropped brand assets. */
-const LOGO_ASPECT = 775 / 748; // badge emblem (logo-mark.png)
-const WORDMARK_ASPECT = 1049 / 141; // "MAGASOOL" wordmark (logo-wordmark.png)
-const TAGLINE_ASPECT = 1059 / 64; // "GREEN . FRESH . CANDOR" (logo-tagline.png)
+/** Intrinsic ratios of the brand assets. */
+const BADGE_ASPECT = 775 / 748; // banana-tree emblem (logo-mark.png)
+const TEXT_ASPECT = 387 / 99; // combined wordmark + tagline (logo-header.png)
 
 /** Map each header nav label to the page it opens. */
 const ROUTE_FOR: Record<string, Route> = {
@@ -37,12 +36,9 @@ export function Header() {
     navigate(ROUTE_FOR[item] ?? 'home');
   };
 
-  // Brand lockup sizing: stack the wordmark over the tagline, aligned to the
-  // same width, next to the badge emblem.
-  const badgeH = isMobile ? 72 : 148;
-  const wordmarkH = isMobile ? 22 : 38;
-  const wordmarkW = wordmarkH * WORDMARK_ASPECT;
-  const taglineH = wordmarkW / TAGLINE_ASPECT; // tagline width == wordmark width
+  // Brand lockup: emblem next to the combined wordmark+tagline image.
+  const badgeH = isMobile ? 88 : 180;
+  const textH = isMobile ? 44 : 80;
 
   return (
     <View style={styles.bar}>
@@ -51,24 +47,16 @@ export function Header() {
           <Pressable onPress={() => go('Home')} style={styles.brand} accessibilityRole="link" accessibilityLabel="Magasool — Home">
             <Image
               source={require('../../assets/logo-mark.png')}
-              style={{ height: badgeH, width: badgeH * LOGO_ASPECT }}
+              style={{ height: badgeH, width: badgeH * BADGE_ASPECT }}
               resizeMode="contain"
               accessibilityLabel="Magasool emblem"
             />
-            <View style={styles.brandWords}>
-              <Image
-                source={require('../../assets/logo-wordmark.png')}
-                style={{ height: wordmarkH, width: wordmarkW }}
-                resizeMode="contain"
-                accessibilityLabel="Magasool"
-              />
-              <Image
-                source={require('../../assets/logo-tagline.png')}
-                style={{ height: taglineH, width: wordmarkW, marginTop: isMobile ? 3 : 5 }}
-                resizeMode="contain"
-                accessibilityLabel="Green. Fresh. Candor."
-              />
-            </View>
+            <Image
+              source={require('../../assets/logo-header.png')}
+              style={{ height: textH, width: textH * TEXT_ASPECT }}
+              resizeMode="contain"
+              accessibilityLabel="Magasool — Green. Fresh. Candor."
+            />
           </Pressable>
 
           {!isMobile && (
@@ -135,7 +123,6 @@ const styles = StyleSheet.create({
   },
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 12 as unknown as number, flexShrink: 1 },
-  brandWords: { justifyContent: 'center' },
   nav: { flexDirection: 'row', alignItems: 'center', gap: 26 as unknown as number },
   navItem: { alignItems: 'center' },
   navText: { color: colors.body, fontSize: 14.5, fontWeight: '600' },

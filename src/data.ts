@@ -80,10 +80,10 @@ export const STEPS = [
 ];
 
 export const STATS = [
-  { icon: 'people' as const, value: '15,000+', label: 'Verified Farmers' },
-  { icon: 'briefcase' as const, value: '2,500+', label: 'Active Buyers' },
-  { icon: 'swap-horizontal' as const, value: '1,20,000+', label: 'Trades Completed' },
-  { icon: 'cash' as const, value: '₹350 Cr+', label: 'Trade Facilitated' },
+  { icon: 'people' as const, value: '1,480+', label: 'Verified Farmers' },
+  { icon: 'briefcase' as const, value: '150+', label: 'Active Buyers' },
+  { icon: 'swap-horizontal' as const, value: '1,800+', label: 'Trades Completed' },
+  { icon: 'cash' as const, value: '₹5 Cr+', label: 'Trade Facilitated' },
 ];
 
 export const WHY = [
