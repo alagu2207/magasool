@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, shadow, glass } from '../theme';
+import { colors, shadow } from '../theme';
 import { Container } from '../ui/Container';
+import { Logo } from '../ui/Logo';
 import { Button } from '../ui/Button';
 import { useResponsive } from '../hooks/useResponsive';
 import { useNav, Route } from '../nav/NavProvider';
@@ -10,53 +11,81 @@ import { useFormModal } from '../forms/FormModalProvider';
 import { trackEvent } from '../analytics/analytics';
 import { NAV } from '../data';
 
-/** Intrinsic ratios of the brand assets. */
-const BADGE_ASPECT = 775 / 748; // banana-tree emblem (logo-mark.png)
-const TEXT_ASPECT = 387 / 99; // combined wordmark + tagline (logo-header.png)
+const SECTION_IDS: Record<string, string> = {
+  Home: 'top',
+  'About Us': 'why-choose',
+  'Our Products': 'products',
+  'Export Process': 'export-process',
+  'Mission & Vision': 'mission-vision',
+  'Contact Us': 'rfq-form',
+};
 
-/** Map each header nav label to the page it opens. */
 const ROUTE_FOR: Record<string, Route> = {
-  'About Us': 'about',
-  Products: 'products',
-  'Contact Us': 'contact',
-  'Privacy Policy': 'privacy',
-  'Terms & Conditions': 'terms',
+  Home: 'home',
+  'About Us': 'home',
+  'Our Products': 'home',
+  'Export Process': 'home',
+  'Mission & Vision': 'home',
+  'Contact Us': 'home',
 };
 
 export function Header() {
   const { isMobile } = useResponsive();
-  const { navigate } = useNav();
+  const { route, navigate } = useNav();
   const { openForm } = useFormModal();
-  const [active, setActive] = useState('');
+  const [active, setActive] = useState('Home');
   const [open, setOpen] = useState(false);
+
+  const scrollToSection = (id: string) => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      if (id === 'top') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
 
   const go = (item: string) => {
     setActive(item);
     trackEvent('nav_click', { item, location: 'header' });
-    navigate(ROUTE_FOR[item] ?? 'home');
+    const targetRoute = ROUTE_FOR[item] ?? 'home';
+    if (route !== targetRoute) {
+      navigate(targetRoute);
+      setTimeout(() => {
+        scrollToSection(SECTION_IDS[item] ?? 'top');
+      }, 150);
+    } else {
+      scrollToSection(SECTION_IDS[item] ?? 'top');
+    }
   };
 
-  // Brand lockup: emblem next to the combined wordmark+tagline image.
-  const badgeH = isMobile ? 88 : 180;
-  const textH = isMobile ? 44 : 80;
+  const handleRequestQuote = () => {
+    trackEvent('cta_click', { label: 'Request a Quote', location: 'header' });
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const el = document.getElementById('rfq-form');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+    openForm('buyer');
+  };
 
   return (
     <View style={styles.bar}>
       <Container>
         <View style={styles.row}>
-          <Pressable onPress={() => go('Home')} style={styles.brand} accessibilityRole="link" accessibilityLabel="Magasool — Home">
-            <Image
-              source={require('../../assets/logo-mark.png')}
-              style={{ height: badgeH, width: badgeH * BADGE_ASPECT }}
-              resizeMode="contain"
-              accessibilityLabel="Magasool emblem"
-            />
-            <Image
-              source={require('../../assets/logo-header.png')}
-              style={{ height: textH, width: textH * TEXT_ASPECT }}
-              resizeMode="contain"
-              accessibilityLabel="Magasool — Green. Fresh. Candor."
-            />
+          <Pressable
+            onPress={() => go('Home')}
+            style={styles.brand}
+            accessibilityRole="link"
+            accessibilityLabel="Magasool — Home"
+          >
+            <Logo tone="light" height={isMobile ? 36 : 42} showTagline={!isMobile} />
           </Pressable>
 
           {!isMobile && (
@@ -75,8 +104,14 @@ export function Header() {
 
           {!isMobile ? (
             <View style={styles.actions}>
-              <Button label="Farmer" variant="green" size="sm" icon="leaf-outline" onPress={() => openForm('farmer')} />
-              <Button label="Buyer" variant="yellow" size="sm" icon="cart-outline" onPress={() => openForm('buyer')} style={{ marginLeft: 10 }} />
+              <Button
+                label="Request a Quote"
+                variant="orange"
+                size="sm"
+                icon="paper-plane-outline"
+                iconPosition="left"
+                onPress={handleRequestQuote}
+              />
             </View>
           ) : (
             <Pressable onPress={() => setOpen((o) => !o)} style={styles.burger}>
@@ -88,13 +123,30 @@ export function Header() {
         {isMobile && open && (
           <View style={styles.mobileMenu}>
             {NAV.map((item) => (
-              <Pressable key={item} onPress={() => { go(item); setOpen(false); }} style={styles.mobileItem}>
+              <Pressable
+                key={item}
+                onPress={() => {
+                  go(item);
+                  setOpen(false);
+                }}
+                style={styles.mobileItem}
+              >
                 <Text style={[styles.navText, item === active && styles.navTextActive]}>{item}</Text>
               </Pressable>
             ))}
             <View style={styles.mobileActions}>
-              <Button label="Farmer" variant="green" size="sm" icon="leaf-outline" full style={{ flex: 1 }} onPress={() => { openForm('farmer'); setOpen(false); }} />
-              <Button label="Buyer" variant="yellow" size="sm" icon="cart-outline" full style={{ flex: 1, marginLeft: 10 }} onPress={() => { openForm('buyer'); setOpen(false); }} />
+              <Button
+                label="Request a Quote"
+                variant="orange"
+                size="md"
+                icon="paper-plane-outline"
+                iconPosition="left"
+                full
+                onPress={() => {
+                  handleRequestQuote();
+                  setOpen(false);
+                }}
+              />
             </View>
           </View>
         )}
@@ -105,38 +157,39 @@ export function Header() {
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: glass.fillStrong,
-    paddingVertical: 12,
+    backgroundColor: colors.white,
+    paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: glass.borderSoft,
-    // web-only: frost content scrolling beneath the bar
-    // @ts-ignore
-    backdropFilter: 'blur(18px) saturate(140%)',
-    // @ts-ignore
-    WebkitBackdropFilter: 'blur(18px) saturate(140%)',
+    borderBottomColor: '#EBEFEA',
     ...shadow.soft,
-    // @ts-ignore web-only: pin the bar so the frosted blur reads as you scroll
+    // @ts-ignore web-only: pin the bar
     position: 'sticky',
     // @ts-ignore
     top: 0,
-    zIndex: 10,
+    zIndex: 50,
   },
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 12 as unknown as number, flexShrink: 1 },
-  nav: { flexDirection: 'row', alignItems: 'center', gap: 26 as unknown as number },
-  navItem: { alignItems: 'center' },
-  navText: { color: colors.body, fontSize: 14.5, fontWeight: '600' },
+  brand: { flexDirection: 'row', alignItems: 'center', flexShrink: 1 },
+  nav: { flexDirection: 'row', alignItems: 'center', gap: 24 as unknown as number },
+  navItem: { alignItems: 'center', paddingVertical: 4 },
+  navText: { color: colors.body, fontSize: 13.5, fontWeight: '600' },
   navTextActive: { color: colors.green, fontWeight: '700' },
   navUnderline: {
-    marginTop: 5,
-    height: 2,
-    width: 18,
+    marginTop: 4,
+    height: 2.5,
+    width: 22,
     borderRadius: 2,
     backgroundColor: colors.green,
   },
   actions: { flexDirection: 'row', alignItems: 'center' },
   burger: { padding: 4 },
-  mobileMenu: { marginTop: 12, gap: 4 as unknown as number },
+  mobileMenu: {
+    marginTop: 14,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    gap: 4 as unknown as number,
+  },
   mobileItem: { paddingVertical: 10 },
-  mobileActions: { flexDirection: 'row', marginTop: 10 },
+  mobileActions: { marginTop: 12 },
 });

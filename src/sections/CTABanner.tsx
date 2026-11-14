@@ -1,42 +1,84 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, radius } from '../theme';
 import { Container } from '../ui/Container';
 import { Button } from '../ui/Button';
 import { useResponsive } from '../hooks/useResponsive';
 import { useFormModal } from '../forms/FormModalProvider';
+import { trackEvent } from '../analytics/analytics';
+import { CTA_BANNER } from '../data';
 
 export function CTABanner() {
-  const { isMobile } = useResponsive();
+  const { isMobile, isTablet } = useResponsive();
   const { openForm } = useFormModal();
+  const stack = isMobile || isTablet;
+
+  const scrollToSection = (id: string) => {
+    trackEvent('cta_banner_click', { target: id });
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+    }
+  };
+
+  const handleRequestQuote = () => {
+    trackEvent('cta_banner_click', { target: 'rfq-form' });
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const el = document.getElementById('rfq-form');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+    openForm('buyer');
+  };
+
   return (
     <View style={styles.section}>
       <Container>
         <LinearGradient
-          colors={['#1E7A3D', '#15692F']}
+          colors={['#145A2B', '#0E3B1C']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
-          style={[styles.banner, isMobile && styles.bannerStack]}
+          style={[styles.banner, stack && styles.bannerStack]}
         >
-          <View style={[styles.left, isMobile && styles.leftStack]}>
-            <View style={styles.iconCircle}>
-              <MaterialCommunityIcons name="sprout" size={26} color={colors.white} />
-            </View>
-            <View style={styles.copy}>
-              <Text style={styles.title}>Ready to Grow Together?</Text>
-              <Text style={styles.sub}>
-                Join Magasool today — a trusted network where farmers and buyers connect,
-                trade fairly, and grow together.
-              </Text>
-            </View>
+          <View style={[styles.copyWrap, stack && styles.copyWrapStack]}>
+            <Text style={styles.title}>{CTA_BANNER.title}</Text>
+            <Text style={styles.subtitle}>{CTA_BANNER.subtitle}</Text>
           </View>
 
-          <View style={[styles.actions, isMobile && styles.actionsStack]}>
-            <Button label="Join as Farmer" variant="outline" icon="paper-plane-outline" onPress={() => openForm('farmer')} style={styles.joinFarmer} />
-            <Button label="Join as Buyer" variant="yellow" icon="cart-outline" onPress={() => openForm('buyer')} style={!isMobile ? { marginLeft: 12 } : { marginTop: 10 }} />
+          <View style={[styles.actionWrap, stack && styles.actionWrapStack]}>
+            <Button
+              label={CTA_BANNER.ctaPrimary}
+              variant="orange"
+              size="sm"
+              icon="arrow-forward"
+              iconPosition="right"
+              onPress={handleRequestQuote}
+            />
+            <Button
+              label={CTA_BANNER.ctaSecondary}
+              variant="green-outline"
+              size="sm"
+              onPress={() => scrollToSection('products')}
+              style={styles.outlineBtn}
+            />
           </View>
+
+          {!isMobile && (
+            <View style={styles.produceImageWrap}>
+              <Image
+                source={require('../../assets/mockup/cta-produce.png')}
+                style={styles.produceImage}
+                resizeMode="cover"
+                accessibilityLabel="Fresh produce crates"
+              />
+            </View>
+          )}
         </LinearGradient>
       </Container>
     </View>
@@ -44,27 +86,73 @@ export function CTABanner() {
 }
 
 const styles = StyleSheet.create({
-  section: { backgroundColor: colors.white, paddingVertical: 28 },
+  section: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 24,
+  },
   banner: {
-    borderRadius: radius.lg,
-    paddingVertical: 30,
-    paddingHorizontal: 34,
+    borderRadius: radius.md,
+    paddingVertical: 24,
+    paddingHorizontal: 28,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    position: 'relative',
     overflow: 'hidden',
   },
-  bannerStack: { flexDirection: 'column', alignItems: 'flex-start' },
-  left: { flexDirection: 'row', alignItems: 'center', flex: 1, paddingRight: 20 },
-  leftStack: { paddingRight: 0, marginBottom: 18 },
-  iconCircle: {
-    width: 54, height: 54, borderRadius: 27, backgroundColor: 'rgba(255,255,255,0.15)',
-    alignItems: 'center', justifyContent: 'center', marginRight: 18,
+  bannerStack: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    paddingVertical: 24,
+    paddingHorizontal: 20,
   },
-  copy: { flex: 1 },
-  title: { color: colors.white, fontSize: 24, fontWeight: '800', marginBottom: 6 },
-  sub: { color: 'rgba(255,255,255,0.88)', fontSize: 13.5, lineHeight: 20, maxWidth: 520 },
-  actions: { flexDirection: 'row', alignItems: 'center' },
-  actionsStack: { flexDirection: 'column', alignItems: 'stretch', alignSelf: 'stretch' },
-  joinFarmer: { backgroundColor: colors.white, borderColor: colors.white },
+  copyWrap: {
+    flex: 1.5,
+    paddingRight: 20,
+    zIndex: 2,
+  },
+  copyWrapStack: {
+    paddingRight: 0,
+    marginBottom: 16,
+  },
+  title: {
+    color: colors.white,
+    fontSize: 20,
+    fontWeight: '900',
+    letterSpacing: -0.2,
+    marginBottom: 6,
+  },
+  subtitle: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 12.5,
+    lineHeight: 18,
+    maxWidth: 500,
+  },
+  actionWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10 as unknown as number,
+    zIndex: 2,
+  },
+  actionWrapStack: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  outlineBtn: {
+    borderColor: 'rgba(255,255,255,0.5)',
+    backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  produceImageWrap: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    top: 0,
+    width: 140,
+    opacity: 0.65,
+    overflow: 'hidden',
+  },
+  produceImage: {
+    width: '100%',
+    height: '100%',
+  },
 });

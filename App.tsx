@@ -24,10 +24,12 @@ if (Platform.OS === 'web' && typeof document !== 'undefined') {
 import { colors } from './src/theme';
 import { Header } from './src/sections/Header';
 import { Hero } from './src/sections/Hero';
-import { About } from './src/sections/About';
 import { HowItWorks } from './src/sections/HowItWorks';
-import { StatsBar } from './src/sections/StatsBar';
+import { ProduceAndEnquiry } from './src/sections/ProduceAndEnquiry';
 import { WhyChoose } from './src/sections/WhyChoose';
+import { StatsBar } from './src/sections/StatsBar';
+import { GlobalMarkets } from './src/sections/GlobalMarkets';
+import { MissionVision } from './src/sections/MissionVision';
 import { Testimonials } from './src/sections/Testimonials';
 import { CTABanner } from './src/sections/CTABanner';
 import { Footer } from './src/sections/Footer';
@@ -56,10 +58,12 @@ function Home() {
   return (
     <>
       <Hero />
-      <Reveal><About /></Reveal>
       <Reveal><HowItWorks /></Reveal>
-      <Reveal><StatsBar /></Reveal>
+      <Reveal><ProduceAndEnquiry /></Reveal>
       <Reveal><WhyChoose /></Reveal>
+      <Reveal><StatsBar /></Reveal>
+      <Reveal><GlobalMarkets /></Reveal>
+      <Reveal><MissionVision /></Reveal>
       <Reveal><Testimonials /></Reveal>
       <Reveal><CTABanner /></Reveal>
     </>

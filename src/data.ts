@@ -1,13 +1,245 @@
 /** All landing-page copy in one place so sections stay presentational. */
 
-// Privacy Policy & Terms live in the footer (Support column), not the header.
-export const NAV = ['About Us', 'Products', 'Contact Us'];
+export const NAV = ['Home', 'About Us', 'Our Products', 'Export Process', 'Mission & Vision', 'Contact Us'];
 
 export const HERO_BADGES = [
-  { icon: 'shield-checkmark' as const, label: 'Verified Network' },
-  { icon: 'cash-outline' as const, label: 'Fair & Transparent' },
-  { icon: 'headset' as const, label: 'End-to-End Support' },
+  { icon: 'shield-checkmark' as const, label: 'Quality-Focused Sourcing' },
+  { icon: 'leaf' as const, label: 'Fresh Produce Supply' },
+  { icon: 'globe' as const, label: 'Global Export Services' },
 ];
+
+export const HERO = {
+  eyebrow: 'INDIAN AGRICULTURE • GLOBAL EXPORTS',
+  titleDark: 'Fresh from Indian Farms.',
+  titleGreen: 'Delivered to the World.',
+  lead: 'Discover premium-quality Indian vegetables and fruits, carefully sourced and supplied to international markets. Your trusted partner for fresh produce exports.',
+  ctaPrimary: 'Explore Our Products',
+  ctaSecondary: 'Request a Quote',
+};
+
+export const EXPORT_PROCESS = {
+  title: 'From Farm to Global Markets',
+  highlight: 'Global Markets',
+  subtitle: "Bringing India's agricultural richness to international customers through a streamlined export process.",
+  steps: [
+    {
+      no: '01',
+      title: 'Product Sourcing',
+      desc: 'We source fresh vegetables and fruits through our local agricultural network, prioritizing freshness and quality.',
+      image: require('../assets/mockup/process-sourcing.png'),
+    },
+    {
+      no: '02',
+      title: 'Quality & Packaging',
+      desc: 'Our export process focuses on product inspection, grading, appropriate packaging, and handling requirements.',
+      image: require('../assets/mockup/process-quality.png'),
+    },
+    {
+      no: '03',
+      title: 'Global Export',
+      desc: "We coordinate export operations and international supply to meet our buyers' requirements.",
+      image: require('../assets/mockup/process-export.png'),
+    },
+  ],
+};
+
+export type ProduceCategory = 'All Products' | 'Vegetables' | 'Fruits' | 'Flowers';
+
+export interface ProduceItem {
+  id: string;
+  name: string;
+  category: 'Vegetable' | 'Fruit' | 'Flower';
+  origin: string;
+  available: string;
+  price: string;
+  moq: string;
+  image: any;
+}
+
+export const PRODUCE_CATEGORIES: ProduceCategory[] = ['All Products', 'Vegetables', 'Fruits', 'Flowers'];
+
+export const PRODUCE_ITEMS: ProduceItem[] = [
+  {
+    id: 'red-onion',
+    name: 'Fresh Red Onion',
+    category: 'Vegetable',
+    origin: 'India',
+    available: 'Year Round',
+    price: '$[Price] / MT',
+    moq: 'MOQ: [XX] MT',
+    image: require('../assets/mockup/prod-onion.png'),
+  },
+  {
+    id: 'tomato',
+    name: 'Tomato',
+    category: 'Vegetable',
+    origin: 'India',
+    available: 'Year Round',
+    price: '$[Price] / kg',
+    moq: 'MOQ: [XX] kg',
+    image: require('../assets/mockup/prod-tomato.png'),
+  },
+  {
+    id: 'green-chilli',
+    name: 'Green Chilli',
+    category: 'Vegetable',
+    origin: 'India',
+    available: 'Year Round',
+    price: '$[Price] / kg',
+    moq: 'MOQ: [XX] kg',
+    image: require('../assets/mockup/prod-chilli.png'),
+  },
+  {
+    id: 'greens',
+    name: 'Greens',
+    category: 'Vegetable',
+    origin: 'India',
+    available: 'Year Round',
+    price: '$[Price] / kg',
+    moq: 'MOQ: [XX] kg',
+    image: require('../assets/mockup/prod-greens.png'),
+  },
+  {
+    id: 'mango',
+    name: 'Mango',
+    category: 'Fruit',
+    origin: 'India',
+    available: 'Seasonal',
+    price: '$[Price] / kg',
+    moq: 'MOQ: [XX] kg',
+    image: require('../assets/mockup/prod-mango.png'),
+  },
+  {
+    id: 'banana',
+    name: 'Banana',
+    category: 'Fruit',
+    origin: 'India',
+    available: 'Year Round',
+    price: '$[Price] / MT',
+    moq: 'MOQ: [XX] MT',
+    image: require('../assets/mockup/prod-banana.png'),
+  },
+  {
+    id: 'papaya',
+    name: 'Papaya',
+    category: 'Fruit',
+    origin: 'India',
+    available: 'Year Round',
+    price: '$[Price] / kg',
+    moq: 'MOQ: [XX] kg',
+    image: require('../assets/mockup/prod-papaya.png'),
+  },
+  {
+    id: 'green-mugwort',
+    name: 'Green Mugwort',
+    category: 'Flower',
+    origin: 'India',
+    available: 'Seasonal',
+    price: '$[Price] / kg',
+    moq: 'MOQ: [XX] kg',
+    image: require('../assets/mockup/prod-mugwort.png'),
+  },
+  {
+    id: 'cockscomb',
+    name: 'Cockscomb',
+    category: 'Flower',
+    origin: 'India',
+    available: 'Seasonal',
+    price: '$[Price] / kg',
+    moq: 'MOQ: [XX] kg',
+    image: require('../assets/mockup/prod-cockscomb.png'),
+  },
+  {
+    id: 'indian-oleander',
+    name: 'Indian Oleander',
+    category: 'Flower',
+    origin: 'India',
+    available: 'Year Round',
+    price: '$[Price] / kg',
+    moq: 'MOQ: [XX] kg',
+    image: require('../assets/mockup/prod-oleander.png'),
+  },
+];
+
+export const WHY_CHOOSE = [
+  {
+    icon: 'leaf-outline' as const,
+    title: 'Quality-Focused Sourcing',
+    desc: 'Fresh produce sourced through a carefully coordinated agricultural network.',
+  },
+  {
+    icon: 'cash-outline' as const,
+    title: 'Competitive Pricing',
+    desc: 'Value-driven export quotations based on product specifications and order requirements.',
+  },
+  {
+    icon: 'cube-outline' as const,
+    title: 'Reliable Supply',
+    desc: 'Organized sourcing and export coordination to support consistent business requirements.',
+  },
+  {
+    icon: 'headset-outline' as const,
+    title: 'Dedicated Export Support',
+    desc: 'Personalized assistance throughout enquiry, quotation, and export coordination.',
+  },
+];
+
+export const STATS = [
+  { icon: 'basket-outline' as const, value: '[XX]+', label: 'Product Varieties' },
+  { icon: 'person-outline' as const, value: '[XX]+', label: 'Farmer Sourcing Partners' },
+  { icon: 'globe-outline' as const, value: '[XX]+', label: 'Countries Served' },
+  { icon: 'boat-outline' as const, value: '[XX]+', label: 'Export Orders' },
+];
+
+export const GLOBAL_MARKETS = {
+  title: 'Connecting Indian Produce with Global Markets',
+  highlight: 'Global Markets',
+  subtitle: 'Taking the freshness and diversity of Indian agricultural produce to international customers.',
+  destinations: [
+    { country: 'UAE', note: 'Export Destination (Placeholder)', flag: '🇦🇪' },
+    { country: 'Singapore', note: 'Export Destination (Placeholder)', flag: '🇸🇬' },
+    { country: 'Malaysia', note: 'Export Destination (Placeholder)', flag: '🇲🇾' },
+    { country: 'Australia', note: 'Export Destination (Placeholder)', flag: '🇦🇺' },
+  ],
+};
+
+export const MISSION_VISION = {
+  mission: {
+    title: 'Our Mission',
+    text: 'To connect the richness of Indian agriculture with global markets by exporting fresh, high-quality vegetables and fruits. We strive to deliver farm-fresh produce to international customers through reliable sourcing, quality-focused practices, transparent business relationships, and efficient export services while creating sustainable opportunities for local farmers.',
+    image: require('../assets/mockup/mission-farmer.png'),
+  },
+  vision: {
+    title: 'Our Vision',
+    text: "To become a trusted global supplier of fresh Indian agricultural produce, bringing the diversity and quality of India's farms to international markets. We envision building a strong global supply network that empowers local farmers, strengthens international trade relationships, and establishes Indian agricultural products as a preferred choice worldwide.",
+    image: require('../assets/mockup/vision-port.png'),
+  },
+};
+
+export const TESTIMONIALS = [
+  {
+    quote: '[Placeholder] The produce quality, packaging, and communication were very professional. A reliable partner for our import requirements!',
+    name: 'Buyer Name (Placeholder)',
+    role: 'International Produce Buyer',
+  },
+  {
+    quote: 'We are satisfied with the quality and timely coordination. The team is responsive and supportive throughout the process.',
+    name: 'Company Name (Placeholder)',
+    role: 'Importer & Distributor',
+  },
+  {
+    quote: 'A consistent and professional export partner for fresh Indian vegetables and fruits. We look forward to a long-term business relationship.',
+    name: 'Partner Name (Placeholder)',
+    role: 'Business Partner',
+  },
+];
+
+export const CTA_BANNER = {
+  title: 'Bring the Best of Indian Agriculture to Your Market.',
+  subtitle: "Looking for a reliable fresh produce export partner? Let's discuss your requirements and build a successful business relationship.",
+  ctaPrimary: 'Request a Quote',
+  ctaSecondary: 'Explore Our Products',
+};
 
 type HeroFlowItem = {
   emoji: string;
@@ -58,80 +290,8 @@ export const ABOUT = {
   ],
 };
 
-export const STEPS = [
-  {
-    no: '01',
-    icon: 'account-hard-hat' as const,
-    title: 'For Farmers',
-    desc: 'Register, list your produce, and get connected with verified buyers through our Magasool team.',
-  },
-  {
-    no: '02',
-    icon: 'briefcase-outline' as const,
-    title: 'For Buyers',
-    desc: 'Submit your requirements, connect with our Magasool team, and get the best quality at fair prices.',
-  },
-  {
-    no: '03',
-    icon: 'account-group-outline' as const,
-    title: 'For the Magasool Team',
-    desc: 'Our Magasool team bridges the gap between farmers and buyers and ensures smooth transactions.',
-  },
-];
-
-export const STATS = [
-  { icon: 'people' as const, value: '1,480+', label: 'Verified Farmers' },
-  { icon: 'briefcase' as const, value: '150+', label: 'Active Buyers' },
-  { icon: 'swap-horizontal' as const, value: '1,800+', label: 'Trades Completed' },
-  { icon: 'cash' as const, value: '₹5 Cr+', label: 'Trade Facilitated' },
-];
-
-export const WHY = [
-  {
-    icon: 'shield-checkmark' as const,
-    title: 'Verified Farmers',
-    desc: 'We onboard only verified farmers to ensure quality and trust.',
-  },
-  {
-    icon: 'pricetags' as const,
-    title: 'Fair Pricing',
-    desc: 'Transparent pricing and better margins for both farmers and buyers.',
-  },
-  {
-    icon: 'person' as const,
-    title: 'Dedicated Magasool Team',
-    desc: 'Personalized support from a dedicated Magasool team for seamless communication.',
-  },
-  {
-    icon: 'headset' as const,
-    title: 'End-to-End Support',
-    desc: 'From inquiry to delivery, we provide complete assistance.',
-  },
-];
-
-export const TESTIMONIALS = [
-  {
-    quote:
-      'Magasool helped us sell our bananas at a better price with genuine buyers. The Magasool team is very supportive.',
-    name: 'Ramesh Patil',
-    role: 'Farmer, Nashik',
-    emoji: '👨‍🌾',
-  },
-  {
-    quote:
-      'We get consistent quality and timely supply. Magasool understands our requirements well.',
-    name: 'Vikram Mehta',
-    role: 'Buyer, Mumbai',
-    emoji: '🧑‍💼',
-  },
-  {
-    quote:
-      'Being part of the Magasool team has helped me build strong relationships and grow my business.',
-    name: 'Sandeep Kumar',
-    role: 'Magasool Team',
-    emoji: '🧑‍🔧',
-  },
-];
+export const STEPS = EXPORT_PROCESS.steps;
+export const WHY = WHY_CHOOSE;
 
 /**
  * Products marketplace listing.
@@ -355,17 +515,36 @@ export const TERMS = {
  * Replace the URLs with Magasool's real profile links.
  */
 export const SOCIALS = [
-  { icon: 'logo-facebook' as const, label: 'Facebook', url: 'https://www.facebook.com/share/1BmFs3STzC/' },
-  { icon: 'logo-instagram' as const, label: 'Instagram', url: 'https://www.instagram.com/magasool.india' },
+  { icon: 'logo-linkedin' as const, label: 'LinkedIn', url: 'https://linkedin.com' },
+  { icon: 'logo-twitter' as const, label: 'Twitter', url: 'https://twitter.com' },
+  { icon: 'logo-instagram' as const, label: 'Instagram', url: 'https://instagram.com/magasool.india' },
+  { icon: 'logo-youtube' as const, label: 'YouTube', url: 'https://youtube.com' },
 ];
 
 export const FOOTER = {
+  about:
+    'Magasool is an Indian fresh produce export company supplying high-quality vegetables, fruits, and floral produce to international markets through reliable sourcing, quality-focused practices, and efficient export services.',
   columns: [
-    { title: 'Quick Links', links: ['Home', 'About Us', 'How It Works', 'Products', 'Contact Us'] },
-    { title: 'For Farmers', links: ['Register as Farmer', 'List Your Produce', 'Farmer Support', 'Pricing Insights'] },
-    { title: 'For Buyers', links: ['Submit Requirement', 'Find Products', 'Buyer Support', 'Log in'] },
-    { title: 'Support', links: ['Help Center', 'Terms & Conditions', 'Privacy Policy', 'Contact Support'] },
+    {
+      title: 'Quick Links',
+      links: ['About Us', 'Our Products', 'Export Process', 'Mission & Vision', 'Contact Us'],
+    },
+    {
+      title: 'Our Products',
+      links: ['Fresh Vegetables', 'Fresh Fruits', 'Seasonal Produce', 'Product Catalogue'],
+    },
+    {
+      title: 'Support',
+      links: ['Request a Quote', 'Export Enquiries', 'FAQ', 'Privacy Policy', 'Terms & Conditions', 'Contact Support'],
+    },
   ],
+  contact: {
+    title: 'Get In Touch',
+    address: 'Your Company Address, City, State, India - Pin: [XXXXXX]',
+    phone: '+91 [Your Phone Number]',
+    email: 'info@magasool.com',
+    whatsapp: 'Contact Support',
+  },
   socials: SOCIALS,
 };
 

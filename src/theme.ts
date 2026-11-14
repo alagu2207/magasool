@@ -5,22 +5,29 @@
 export const colors = {
   green: '#1E7A3D',
   greenDeep: '#15803D',
-  greenDark: '#11331F', // footer
-  greenStatsFrom: '#1C7A3C',
-  greenStatsTo: '#11532A',
-  greenAccent: '#2F9E44', // "Source Better", section labels
+  greenDark: '#0E2917', // footer
+  greenStatsFrom: '#1A6E37',
+  greenStatsTo: '#0F4623',
+  greenAccent: '#16A34A', // "Global Markets", section labels
   greenSoft: '#E7F4EA', // chips / step circles
   greenTint: '#F4FAF5', // alternating section bg
+  greenBorder: '#D3E7D7',
+
+  orange: '#E65100', // primary action CTA from mockup
+  orangeLight: '#F97316',
+  orangeDark: '#C2410C',
+  orangeSoft: '#FFF7ED',
+  orangeBorder: '#FED7AA',
 
   yellow: '#F5B301', // golden action color — pair with dark text
   yellowDark: '#C98700', // deeper gold — required markers / accents on light bg
 
-  ink: '#1F2937', // headings
+  ink: '#111827', // headings
   body: '#4B5563', // paragraphs
   muted: '#6B7280', // captions
   faint: '#9CA3AF',
 
-  border: '#E7EBE8',
+  border: '#E5E7EB',
   card: '#FFFFFF',
   white: '#FFFFFF',
   star: '#F5B916',

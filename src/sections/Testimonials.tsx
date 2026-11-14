@@ -3,58 +3,73 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadow } from '../theme';
 import { Container } from '../ui/Container';
-import { SectionHeading } from '../ui/SectionHeading';
 import { useResponsive } from '../hooks/useResponsive';
 import { TESTIMONIALS } from '../data';
 
-function Stars() {
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      {[0, 1, 2, 3, 4].map((i) => (
-        <Ionicons key={i} name="star" size={14} color={colors.star} style={{ marginLeft: 1 }} />
-      ))}
-    </View>
-  );
-}
-
-function Card({ t }: { t: (typeof TESTIMONIALS)[number] }) {
-  return (
-    <View style={styles.card}>
-      <Text style={styles.quoteMark}>“</Text>
-      <Text style={styles.quote}>{t.quote}</Text>
-      <View style={styles.person}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarEmoji}>{t.emoji}</Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.name}>{t.name}</Text>
-          <Text style={styles.role}>{t.role}</Text>
-        </View>
-        <Stars />
-      </View>
-    </View>
-  );
-}
-
 export function Testimonials() {
-  const { isMobile } = useResponsive();
-  const [page, setPage] = useState(0);
+  const { isMobile, isTablet } = useResponsive();
+  const stack = isMobile || isTablet;
+  const [activePage, setActivePage] = useState(0);
+
+  const prev = () => {
+    setActivePage((p) => (p > 0 ? p - 1 : TESTIMONIALS.length - 1));
+  };
+
+  const next = () => {
+    setActivePage((p) => (p < TESTIMONIALS.length - 1 ? p + 1 : 0));
+  };
 
   return (
-    <View style={styles.section}>
+    <View style={styles.section} nativeID="testimonials">
       <Container>
-        <SectionHeading title="What Our Partners Say" />
-        <View style={[styles.row, isMobile && styles.rowStack]}>
-          {TESTIMONIALS.map((t) => (
-            <View key={t.name} style={[styles.cell, isMobile && styles.cellStack]}>
-              <Card t={t} />
-            </View>
-          ))}
+        <View style={styles.header}>
+          <Text style={styles.title}>
+            Building Trusted <Text style={styles.titleGreen}>Global Partnerships</Text>
+          </Text>
+          <Text style={styles.subtitle}>
+            What our international buyers and business partners say about working with Magasool.
+          </Text>
         </View>
-        <View style={styles.dots}>
-          {[0, 1, 2].map((i) => (
-            <Pressable key={i} onPress={() => setPage(i)}>
-              <View style={[styles.dot, i === page && styles.dotActive]} />
+
+        <View style={styles.carouselContainer}>
+          {!stack && (
+            <Pressable style={styles.navBtn} onPress={prev} accessibilityLabel="Previous testimonial">
+              <Ionicons name="chevron-back" size={18} color={colors.body} />
+            </Pressable>
+          )}
+
+          <View style={[styles.cardsRow, stack && styles.cardsRowStack]}>
+            {TESTIMONIALS.map((t, idx) => (
+              <View key={t.name} style={[styles.card, stack && styles.cardStack]}>
+                <View style={styles.quoteIconWrap}>
+                  <Text style={styles.quoteMarks}>“</Text>
+                </View>
+                <Text style={styles.quoteText}>{t.quote}</Text>
+
+                <View style={styles.authorRow}>
+                  <View style={styles.avatarCircle}>
+                    <Ionicons name="person" size={16} color={colors.greenDeep} />
+                  </View>
+                  <View style={styles.authorInfo}>
+                    <Text style={styles.authorName}>{t.name}</Text>
+                    <Text style={styles.authorRole}>{t.role}</Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </View>
+
+          {!stack && (
+            <Pressable style={styles.navBtn} onPress={next} accessibilityLabel="Next testimonial">
+              <Ionicons name="chevron-forward" size={18} color={colors.body} />
+            </Pressable>
+          )}
+        </View>
+
+        <View style={styles.dotsRow}>
+          {TESTIMONIALS.map((_, i) => (
+            <Pressable key={i} onPress={() => setActivePage(i)}>
+              <View style={[styles.dot, i === activePage && styles.dotActive]} />
             </Pressable>
           ))}
         </View>
@@ -64,31 +79,123 @@ export function Testimonials() {
 }
 
 const styles = StyleSheet.create({
-  section: { backgroundColor: colors.white, paddingVertical: 64 },
-  row: { flexDirection: 'row', marginTop: 40, marginHorizontal: -9 },
-  rowStack: { flexDirection: 'column' },
-  cell: { flex: 1, paddingHorizontal: 9 },
-  cellStack: { paddingHorizontal: 0, marginBottom: 16 },
+  section: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 56,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: '900',
+    color: colors.ink,
+    letterSpacing: -0.3,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  titleGreen: {
+    color: colors.greenDeep,
+  },
+  subtitle: {
+    fontSize: 13.5,
+    color: colors.body,
+    textAlign: 'center',
+    maxWidth: 600,
+  },
+  carouselContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12 as unknown as number,
+  },
+  navBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#F3F6F4',
+    borderWidth: 1,
+    borderColor: '#DFECE2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardsRow: {
+    flexDirection: 'row',
+    flex: 1,
+    gap: 16 as unknown as number,
+  },
+  cardsRowStack: {
+    flexDirection: 'column',
+  },
   card: {
-    backgroundColor: colors.white,
+    flex: 1,
+    backgroundColor: '#FFFFFF',
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: colors.border,
-    padding: 22,
-    height: '100%',
+    borderColor: '#DFECE2',
+    padding: 20,
+    justifyContent: 'space-between',
     ...shadow.soft,
   },
-  quoteMark: { fontSize: 40, lineHeight: 36, color: colors.greenAccent, fontWeight: '800', marginBottom: 2 },
-  quote: { fontSize: 13.5, lineHeight: 21, color: colors.body, marginBottom: 18 },
-  person: { flexDirection: 'row', alignItems: 'center' },
-  avatar: {
-    width: 40, height: 40, borderRadius: 20, backgroundColor: colors.greenSoft,
-    alignItems: 'center', justifyContent: 'center', marginRight: 11,
+  cardStack: {
+    width: '100%',
   },
-  avatarEmoji: { fontSize: 20 },
-  name: { fontSize: 13.5, fontWeight: '800', color: colors.ink },
-  role: { fontSize: 11.5, color: colors.muted, marginTop: 1 },
-  dots: { flexDirection: 'row', justifyContent: 'center', marginTop: 26, gap: 8 as unknown as number },
-  dot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.border },
-  dotActive: { backgroundColor: colors.greenAccent, width: 20 },
+  quoteIconWrap: {
+    marginBottom: 6,
+  },
+  quoteMarks: {
+    fontSize: 28,
+    lineHeight: 24,
+    fontWeight: '900',
+    color: colors.greenDeep,
+  },
+  quoteText: {
+    fontSize: 12.5,
+    lineHeight: 19,
+    color: colors.body,
+    marginBottom: 16,
+  },
+  authorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatarCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.greenSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  authorInfo: {
+    flex: 1,
+  },
+  authorName: {
+    fontSize: 12.5,
+    fontWeight: '800',
+    color: colors.ink,
+  },
+  authorRole: {
+    fontSize: 10.5,
+    color: colors.muted,
+  },
+  dotsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8 as unknown as number,
+    marginTop: 22,
+  },
+  dot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: '#D1E2D6',
+  },
+  dotActive: {
+    backgroundColor: colors.greenDeep,
+    width: 18,
+  },
 });
