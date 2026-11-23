@@ -112,7 +112,7 @@ export function AboutPage() {
               <View style={styles.stepCard}>
                 <View style={styles.stepHead}>
                   <View style={styles.stepIcon}>
-                    <MaterialCommunityIcons name={s.icon} size={22} color={colors.green} />
+                    <MaterialCommunityIcons name={((s as any).icon || 'leaf') as any} size={22} color={colors.green} />
                   </View>
                   <Text style={styles.stepNo}>{s.no}</Text>
                 </View>
