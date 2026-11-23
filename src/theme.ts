@@ -50,8 +50,8 @@ export const radius = {
 } as const;
 
 export const layout = {
-  maxWidth: 1160,
-  gutter: 20,
+  maxWidth: 1480,
+  gutter: 24,
 } as const;
 
 export const shadow = {

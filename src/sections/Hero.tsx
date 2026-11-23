@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, Image, StyleSheet, Platform, Pressable, Animated, Easing, useWindowDimensions } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, shadow } from '../theme';
 import { Button } from '../ui/Button';
@@ -13,6 +12,7 @@ export function Hero() {
   const { isMobile, isTablet } = useResponsive();
   const { height: windowHeight } = useWindowDimensions();
   const { openForm } = useFormModal();
+  const stack = isMobile || isTablet;
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
   // Gentle bouncing animation for the "Scroll down to explore" indicator
@@ -20,7 +20,7 @@ export function Hero() {
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(bounceAnim, {
-          toValue: 6,
+          toValue: 5,
           duration: 900,
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: true,
@@ -60,58 +60,31 @@ export function Hero() {
     openForm('buyer');
   };
 
-  // Full first screen height (exact viewport height minus header)
+  // Full first screen height (exact viewport height minus sticky header)
   const heroMinHeight = Platform.OS === 'web'
     ? ('calc(100vh - 72px)' as any)
-    : (windowHeight ? windowHeight - 72 : 680);
+    : (windowHeight ? windowHeight - 72 : 720);
 
   return (
     <View style={[styles.section, { minHeight: heroMinHeight }]} nativeID="home">
-      {/* 1. Full-screen background image filling first screen edge-to-edge */}
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <Image
-          source={require('../../assets/mockup/hero-visual.png')}
-          style={styles.heroBackgroundImage}
-          resizeMode="cover"
-          accessibilityLabel="Magasool global agricultural exports"
-        />
-
-        {/* 2. Gradient overlay ensuring high contrast and perfect text readability */}
-        <LinearGradient
-          colors={[
-            'rgba(8, 24, 13, 0.93)',
-            'rgba(8, 24, 13, 0.85)',
-            'rgba(8, 24, 13, 0.62)',
-            'rgba(8, 24, 13, 0.45)',
-          ]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0.8 }}
-          style={StyleSheet.absoluteFill}
-        />
-      </View>
-
-      {/* 3. Hero content (full width, centered container) */}
-      <View style={styles.contentContainer}>
-        <View style={[styles.innerRow, (isMobile || isTablet) && styles.innerRowStack]}>
-          <View style={[styles.leftColumn, (isMobile || isTablet) && styles.leftColumnStack]}>
-            {/* Eyebrow badge */}
+      {/* Center content extended wide from left to right */}
+      <View style={styles.container}>
+        <View style={[styles.row, stack && styles.rowStack]}>
+          {/* Left Column: Headlines & Actions */}
+          <View style={[styles.left, stack && styles.leftStack]}>
             <View style={styles.eyebrowBadge}>
-              <View style={styles.eyebrowDot} />
               <Text style={styles.eyebrow}>{HERO.eyebrow}</Text>
             </View>
 
-            {/* Main Headline */}
             <Text style={[styles.h1, isMobile && styles.h1Mobile]}>
-              <Text style={styles.h1White}>{HERO.titleDark}{'\n'}</Text>
-              <Text style={styles.h1Accent}>{HERO.titleGreen}</Text>
+              <Text style={styles.h1Dark}>{HERO.titleDark}{'\n'}</Text>
+              <Text style={styles.h1Green}>{HERO.titleGreen}</Text>
             </Text>
 
-            {/* Lead description */}
             <Text style={[styles.lead, isMobile && styles.leadMobile]}>
               {HERO.lead}
             </Text>
 
-            {/* Action buttons */}
             <View style={[styles.ctaRow, isMobile && styles.ctaRowMobile]}>
               <Button
                 label={HERO.ctaPrimary}
@@ -132,32 +105,44 @@ export function Hero() {
               />
             </View>
 
-            {/* Trust Badges */}
+            {/* 3 Badges under buttons */}
             <View style={[styles.badges, isMobile && styles.badgesMobile]}>
               {HERO_BADGES.map((b) => (
                 <View key={b.label} style={styles.badgeItem}>
                   <View style={styles.badgeIconCircle}>
-                    <Ionicons name={b.icon as any} size={15} color="#4ADE80" />
+                    <Ionicons name={b.icon as any} size={15} color={colors.green} />
                   </View>
                   <Text style={styles.badgeLabel}>{b.label}</Text>
                 </View>
               ))}
             </View>
           </View>
+
+          {/* Right Column: Hero Visual Artwork sized for first screen */}
+          <View style={[styles.right, stack && styles.rightStack]}>
+            <View style={[styles.visualCard, isMobile ? styles.visualCardMobile : (isTablet ? styles.visualCardTablet : styles.visualCardDesktop)]}>
+              <Image
+                source={require('../../assets/mockup/hero-visual.png')}
+                style={styles.heroImage}
+                resizeMode="cover"
+                accessibilityLabel="Magasool global agricultural exports illustration"
+              />
+            </View>
+          </View>
         </View>
       </View>
 
-      {/* 4. Bottom "Scroll down to explore" indicator to transition to second page */}
+      {/* Bottom indicator: Smoothly guides user to the second section on scroll */}
       <View style={styles.scrollIndicatorWrapper}>
         <Pressable
           onPress={() => scrollToSection('export-process')}
           style={styles.scrollIndicatorBtn}
           accessibilityRole="button"
-          accessibilityLabel="Scroll down to explore export process"
+          accessibilityLabel="Scroll down to export process"
         >
           <Text style={styles.scrollIndicatorText}>Scroll to explore</Text>
           <Animated.View style={{ transform: [{ translateY: bounceAnim }] }}>
-            <Ionicons name="chevron-down" size={20} color="#86EFAC" />
+            <Ionicons name="chevron-down" size={17} color={colors.green} />
           </Animated.View>
         </Pressable>
       </View>
@@ -167,145 +152,115 @@ export function Hero() {
 
 const styles = StyleSheet.create({
   section: {
+    backgroundColor: '#FAFCFA',
     width: '100%',
+    paddingVertical: 32,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEF4EF',
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'relative',
-    overflow: 'hidden',
-    justifyContent: 'center',
-    backgroundColor: '#0A1C10',
-    paddingVertical: 48,
-    // Ensure no left/right margins
-    marginHorizontal: 0,
   },
-  heroBackgroundImage: {
+  container: {
     width: '100%',
-    height: '100%',
-  },
-  contentContainer: {
-    width: '100%',
-    maxWidth: 1320,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
-    zIndex: 10,
+    maxWidth: 1560,
+    paddingHorizontal: 36,
+    flex: 1,
     justifyContent: 'center',
   },
-  innerRow: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 48 as unknown as number,
+    width: '100%',
   },
-  innerRowStack: {
+  rowStack: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
+    gap: 28 as unknown as number,
   },
-  leftColumn: {
-    maxWidth: 780,
+  left: {
+    flex: 1.1,
+    paddingRight: 12,
   },
-  leftColumnStack: {
-    maxWidth: '100%',
+  leftStack: {
+    paddingRight: 0,
   },
   eyebrowBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(30, 122, 61, 0.45)',
-    borderWidth: 1,
-    borderColor: 'rgba(74, 222, 128, 0.4)',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: radius.pill,
-    marginBottom: 16,
-  },
-  eyebrowDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#4ADE80',
-    marginRight: 8,
+    marginBottom: 14,
   },
   eyebrow: {
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '800',
-    color: '#86EFAC',
+    color: colors.greenDeep,
     letterSpacing: 1.1,
     textTransform: 'uppercase',
   },
   h1: {
-    fontSize: 52,
+    fontSize: 46,
     fontWeight: '900',
-    letterSpacing: -0.8,
-    lineHeight: 58,
-    marginBottom: 20,
+    letterSpacing: -0.6,
+    lineHeight: 52,
+    marginBottom: 18,
   },
   h1Mobile: {
-    fontSize: 34,
-    lineHeight: 40,
+    fontSize: 32,
+    lineHeight: 38,
     letterSpacing: -0.4,
+    marginBottom: 14,
   },
-  h1White: {
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.65)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
+  h1Dark: {
+    color: colors.ink,
   },
-  h1Accent: {
-    color: '#4ADE80',
-    textShadowColor: 'rgba(0, 0, 0, 0.65)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
+  h1Green: {
+    color: colors.greenDeep,
   },
   lead: {
-    fontSize: 17,
-    lineHeight: 26,
-    color: '#E2E8F0',
-    fontWeight: '500',
-    marginBottom: 30,
+    fontSize: 16,
+    lineHeight: 25,
+    color: colors.body,
+    marginBottom: 28,
     maxWidth: 620,
-    textShadowColor: 'rgba(0, 0, 0, 0.6)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
   },
   leadMobile: {
-    fontSize: 15,
+    fontSize: 14.5,
     lineHeight: 22,
-    marginBottom: 22,
+    marginBottom: 20,
   },
   ctaRow: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    marginBottom: 34,
+    marginBottom: 32,
   },
   ctaRowMobile: {
     flexDirection: 'column',
     alignItems: 'stretch',
     width: '100%',
-    marginBottom: 26,
+    marginBottom: 24,
   },
   badges: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 16 as unknown as number,
-    paddingTop: 8,
+    gap: 20 as unknown as number,
+    paddingTop: 6,
   },
   badgesMobile: {
-    gap: 10 as unknown as number,
+    gap: 12 as unknown as number,
   },
   badgeItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(15, 35, 20, 0.6)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    borderRadius: radius.pill,
   },
   badgeIconCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: 'rgba(34, 197, 94, 0.2)',
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: colors.greenSoft,
+    borderWidth: 1,
+    borderColor: '#C6E4CC',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 8,
@@ -313,32 +268,63 @@ const styles = StyleSheet.create({
   badgeLabel: {
     fontSize: 12.5,
     fontWeight: '700',
-    color: '#FFFFFF',
-    letterSpacing: 0.2,
+    color: colors.ink,
+  },
+  right: {
+    flex: 1.25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  rightStack: {
+    width: '100%',
+    marginTop: 8,
+  },
+  visualCard: {
+    width: '100%',
+    borderRadius: radius.lg,
+    overflow: 'hidden',
+    backgroundColor: '#E8F5E9',
+    ...shadow.card,
+  },
+  visualCardDesktop: {
+    height: 480,
+    maxHeight: 520,
+  },
+  visualCardTablet: {
+    height: 380,
+  },
+  visualCardMobile: {
+    height: 260,
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
   },
   scrollIndicatorWrapper: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 12,
     left: 0,
     right: 0,
     alignItems: 'center',
-    zIndex: 20,
+    zIndex: 10,
   },
   scrollIndicatorBtn: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 6 as unknown as number,
     paddingVertical: 6,
     paddingHorizontal: 14,
-    backgroundColor: 'rgba(10, 28, 15, 0.75)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderWidth: 1,
-    borderColor: 'rgba(74, 222, 128, 0.3)',
+    borderColor: '#D3E7D7',
     borderRadius: radius.pill,
+    ...shadow.soft,
   },
   scrollIndicatorText: {
-    fontSize: 11,
+    fontSize: 11.5,
     fontWeight: '700',
-    color: '#E2E8F0',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
-    marginBottom: 2,
+    color: colors.greenDeep,
+    letterSpacing: 0.6,
   },
 });
